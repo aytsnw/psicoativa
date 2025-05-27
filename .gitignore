@@ -1,0 +1,5 @@
+backlog.txt
+deploy.sh
+target/
+src/main/resources/hibernate.cfg.xml
+.vscode/

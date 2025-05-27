@@ -1,0 +1,25 @@
+package com.psicoativa.service;
+
+import com.psicoativa.dto.ClientDto;
+import com.psicoativa.dto.UserAuthDto;
+import com.psicoativa.exception.DbOperationFailedException;
+import com.psicoativa.exception.ServiceFailedException;
+import com.psicoativa.model.Client;
+import com.psicoativa.model.UserAuth;
+
+public class RegisterService {
+    public void registerClient(UserAuthDto uDto, ClientDto cDto){
+        UserAuthService uService = new UserAuthService();
+        ClientService cService = new ClientService();
+        UserAuth user = uService.parseUserAuthDto(uDto);
+        Client client = cService.parseDto(cDto);
+        client.setUserAuth(user);
+        user.setUserBase(client);
+        try {
+            cService.saveClient(client);
+            uService.saveUser(user);
+        } catch (DbOperationFailedException e) {
+            throw new ServiceFailedException("Violation of constraint: cpf or email already exists in database.");
+        }
+    }
+}
