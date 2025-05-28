@@ -16,8 +16,8 @@ public class ClientRepository {
             tr.commit();
         } catch (Exception e) {
             throw new DbOperationFailedException("Already registered in Db: " + "'cpf' or 'email'.");
+        } finally{
+            session.close();
         }
-        session.close();
     }
-    
 }

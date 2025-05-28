@@ -1,20 +1,28 @@
 package com.psicoativa.service;
 
 import com.psicoativa.dto.PsychologistDto;
+import com.psicoativa.exception.DbOperationFailedException;
+import com.psicoativa.exception.InvalidDataException;
+import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.model.Psychologist;
+import com.psicoativa.repository.PsychologistRepository;
 
 public class PsychologistService {
-    public void registerClient(PsychologistDto psyDto){
-
-    }
-
-    private Psychologist parseDto(PsychologistDto psyDto){
-        Psychologist psy = new Psychologist();
-        psy.setCrp(psyDto.getCrp());
-        psy.setName(psyDto.getName());
-        psy.setEmail(psyDto.getEmail());
-        psy.setPhone(psyDto.getPhone());
-        return psy;
+    public void savePsychologist(Psychologist psy) throws ServiceFailedException{
+        PsychologistRepository pRepo = new PsychologistRepository();
+        try {
+            pRepo.addToDb(psy);
+        } catch (InvalidDataException | DbOperationFailedException e) {
+            throw new ServiceFailedException("Service failure: "+ e.getMessage());
+        }
     }
     
-}
+    public Psychologist parseDto(PsychologistDto pDto) throws InvalidDataException{
+        Psychologist psy = new Psychologist();
+        psy.setName(pDto.getName());
+        psy.setCrp(pDto.getCrp());
+        psy.setEmail(pDto.getEmail());
+        psy.setPhone(pDto.getPhone());
+        return psy;
+    }
+} 

@@ -14,7 +14,9 @@ public class RegisterServlet extends HttpServlet{
         if (request.getParameter("type").equals("client")){
             RequestDispatcher rd = request.getRequestDispatcher("/client");
             rd.forward(request, response);
+        } else if (request.getParameter("type").equals("psychologist")){
+            RequestDispatcher rd = request.getRequestDispatcher("/psychologist");
+            rd.forward(request, response);
         }
     }
-    
 }
