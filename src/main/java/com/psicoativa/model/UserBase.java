@@ -44,6 +44,9 @@ public class UserBase {
     public void setUserAuth(UserAuth userAuth){
         this.userAuth = userAuth;
     }
+    public void setAppointments(List<Appointment> appointments){
+        this.appointments = appointments;
+    }
 
     public String getName(){
         return this.name;
@@ -56,6 +59,9 @@ public class UserBase {
     }
     public UserAuth getUserAuth(){
         return this.userAuth;
+    }
+    public List<Appointment> getAppointments(){
+        return this.appointments;
     }
     
 }
