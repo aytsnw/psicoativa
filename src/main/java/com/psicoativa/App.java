@@ -20,6 +20,7 @@ public class App implements ServletContextListener{
             config.addAnnotatedClass(com.psicoativa.model.Client.class);
             config.addAnnotatedClass(com.psicoativa.model.Psychologist.class);
             config.addAnnotatedClass(com.psicoativa.model.UserAuth.class);
+            config.addAnnotatedClass(com.psicoativa.model.Appointment.class);
             config.configure();
             sf = config.buildSessionFactory();
             System.out.println("Hibernate's Session Factory object built!");

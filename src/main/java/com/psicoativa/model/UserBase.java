@@ -1,5 +1,7 @@
 package com.psicoativa.model;
 
+import java.util.List;
+
 import com.psicoativa.exception.InvalidDataException;
 
 import jakarta.persistence.Column;
@@ -9,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -23,6 +26,8 @@ public class UserBase {
     String email;
     @OneToOne(mappedBy="userBase")
     UserAuth userAuth;
+    @OneToMany
+    List<Appointment> appointments;
 
     public void setName(String name) throws InvalidDataException{
         if (name.isEmpty()) throw new InvalidDataException("Invalid client name: empty.");
