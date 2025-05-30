@@ -17,6 +17,8 @@ public class RegisterServlet extends HttpServlet{
         } else if (request.getParameter("type").equals("psychologist")){
             RequestDispatcher rd = request.getRequestDispatcher("/psychologist");
             rd.forward(request, response);
+        } else {
+            response.setStatus(400);
         }
     }
 }

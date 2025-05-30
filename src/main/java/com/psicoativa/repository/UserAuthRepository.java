@@ -27,13 +27,11 @@ public class UserAuthRepository {
 
     public UserAuth findByEmail(String email){
         Session session = App.sf.openSession();
-        UserAuth userAuth = null;
         Query query = session.createQuery("FROM UserAuth WHERE email = ?1", UserAuth.class);
         query.setParameter(1, email);
         List<UserAuth> users = query.getResultList();
         try {
-            userAuth = users.get(0);
-            return userAuth;
+            return users.get(0);
         } catch (IndexOutOfBoundsException e) {
             throw new DbOperationFailedException("Email not registered in database.");
         } finally {

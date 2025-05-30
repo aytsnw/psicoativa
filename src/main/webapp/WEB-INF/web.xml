@@ -29,6 +29,10 @@
         <servlet-name>psychologist</servlet-name>
         <servlet-class>com.psicoativa.controller.PsychologistServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>appointment</servlet-name>
+        <servlet-class>com.psicoativa.controller.AppointmentServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>home</servlet-name>
@@ -49,5 +53,9 @@
     <servlet-mapping>
             <servlet-name>psychologist</servlet-name>
             <url-pattern>/psychologist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+            <servlet-name>appointment</servlet-name>
+            <url-pattern>/appointment</url-pattern>
     </servlet-mapping>
 </web-app>

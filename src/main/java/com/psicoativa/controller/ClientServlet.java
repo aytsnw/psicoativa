@@ -7,6 +7,7 @@ import java.util.Map;
 import com.psicoativa.dto.ClientDto;
 import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.exception.ServiceFailedException;
+import com.psicoativa.exception.BadRequestException;
 import com.psicoativa.service.RegisterService;
 
 import jakarta.servlet.http.HttpServlet;
@@ -26,13 +27,13 @@ public class ClientServlet extends HttpServlet{
 
         RegisterService rService = new RegisterService();
         Map<String, String[]> params = request.getParameterMap();
-        ClientDto cDto = populateClientDto(params);
-        UserAuthDto uDto = populateUserAuthDto(params);
         try {
+            ClientDto cDto = populateClientDto(params);
+            UserAuthDto uDto = populateUserAuthDto(params);
             rService.registerClient(uDto, cDto);
             response.setStatus(200);
             out.println("Client registered!");
-        } catch (ServiceFailedException e) {
+        } catch (ServiceFailedException | BadRequestException e) {
             response.setStatus(400);
             out.println(e.getMessage());
         }
@@ -49,12 +50,16 @@ public class ClientServlet extends HttpServlet{
     }
 
     private ClientDto populateClientDto(Map<String, String[]> params){
-        ClientDto cDto = new ClientDto();
-        cDto.setName(params.get("name")[0]);
-        cDto.setCpf((params.get("cpf")[0]));
-        cDto.setPhone(params.get("phone")[0]);
-        cDto.setEmail(params.get("email")[0]);
+        try {
+            ClientDto cDto = new ClientDto();
+            cDto.setName(params.get("name")[0]);
+            cDto.setCpf((params.get("cpf")[0]));
+            cDto.setPhone(params.get("phone")[0]);
+            cDto.setEmail(params.get("email")[0]);
         return cDto;
+        } catch (NullPointerException e) {
+            throw new BadRequestException("Empty parameter.");
+        }
     }
 
     private UserAuthDto populateUserAuthDto(Map<String, String[]> params){

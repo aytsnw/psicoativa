@@ -16,6 +16,15 @@ public class ClientService {
             throw new ServiceFailedException("Service failure: "+ e.getMessage());
         }
     }
+
+    public Client getClient(int id){
+        ClientRepository cRepo = new ClientRepository();
+        try {
+            return cRepo.findById(id);
+        } catch (DbOperationFailedException e) {
+            throw new ServiceFailedException("Service Failure: Couldn't find client of id: "+ id);
+        }
+    }
     
     public Client parseDto(ClientDto clientDto) throws InvalidDataException{
         Client client = new Client();
