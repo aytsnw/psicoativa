@@ -2,10 +2,12 @@ package com.psicoativa.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.psicoativa.exception.InvalidDataException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,25 +27,32 @@ public class UserBase {
     @Column(name="email", unique=true)
     String email;
     @OneToOne(mappedBy="userBase")
+    @JsonIgnore
     UserAuth userAuth;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     List<Appointment> appointments;
 
     public void setName(String name) throws InvalidDataException{
+        name = name.strip();
         if (name.isEmpty()) throw new InvalidDataException("Invalid client name: empty.");
+        name = name.substring(0,1).toUpperCase() + name.substring(1);
         this.name = name;
     }
+
     public void setPhone(String phone) throws InvalidDataException{
         if (phone.isEmpty()) throw new InvalidDataException("Invalid client phone: empty.");
         this.phone = phone;
     }
+
     public void setEmail(String email) throws InvalidDataException{
         if (email.isEmpty()) throw new InvalidDataException("Invalid client email: empty.");
         this.email = email;
     }
+
     public void setUserAuth(UserAuth userAuth){
         this.userAuth = userAuth;
     }
+    
     public void setAppointments(List<Appointment> appointments){
         this.appointments = appointments;
     }

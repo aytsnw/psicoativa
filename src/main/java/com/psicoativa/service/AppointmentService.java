@@ -1,7 +1,5 @@
 package com.psicoativa.service;
 
-import java.time.LocalDate;
-
 import com.psicoativa.dto.AppointmentDto;
 import com.psicoativa.exception.DbOperationFailedException;
 import com.psicoativa.exception.InvalidDataException;
@@ -14,10 +12,23 @@ public class AppointmentService {
         AppointmentRepository aRepo = new AppointmentRepository();
         try {
             Appointment ap = parseDto(aDto);
+            if (!isTimeSlotFree(ap, aRepo)){
+                throw new ServiceFailedException("Time slot already booked.");
+            }
             aRepo.addToDb(ap);
         } catch (InvalidDataException | DbOperationFailedException e) {
             throw new ServiceFailedException(e.getMessage());
         }
+    }
+
+    private boolean isTimeSlotFree(Appointment ap, AppointmentRepository aRepo){
+        Integer startTimeCandidate = Integer.valueOf(ap.getStartHour().toString() + ap.getStartMinute().toString());
+        Integer endTimeCandidate = Integer.valueOf(ap.getEndHour().toString() + ap.getEndMinute().toString());
+        Appointment apCompare = aRepo.findByEndHour(ap.getDate(), ap.getStartHour());
+        if (apCompare == null){return true;}
+        Integer startTimeCompare = Integer.valueOf(apCompare.getStartHour().toString() + apCompare.getStartMinute().toString());
+        Integer endTimeCompare= Integer.valueOf(apCompare.getEndHour().toString() + apCompare.getEndMinute().toString());
+        return !(startTimeCandidate <= endTimeCompare && endTimeCandidate >= startTimeCompare);
     }
 
     private Appointment parseDto(AppointmentDto aDto) throws InvalidDataException{
@@ -31,5 +42,4 @@ public class AppointmentService {
         ap.setEndminute(aDto.getEndminute());
         return ap;
     }
-    
 }

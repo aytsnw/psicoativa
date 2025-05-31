@@ -27,7 +27,7 @@ public class Appointment {
     private short startHour;
     private short startMinute;
     private short endHour;
-    private short endminute;
+    private short endMinute;
 
     public int getId() {
         return id;
@@ -53,29 +53,29 @@ public class Appointment {
     public void setDate(LocalDate date) {
         this.date = date;
     }
-    public short getStartHour() {
+    public Short getStartHour() {
         return startHour;
     }
     public void setStartHour(short startHour) {
         this.startHour = startHour;
     }
-    public short getStartMinute() {
+    public Short getStartMinute() {
         return startMinute;
     }
     public void setStartMinute(short startMinute) {
         this.startMinute = startMinute;
     }
-    public short getEndHour() {
+    public Short getEndHour() {
         return endHour;
     }
     public void setEndHour(short endHour) {
         this.endHour = endHour;
     }
-    public short getEndminute() {
-        return endminute;
+    public Short getEndMinute() {
+        return endMinute;
     }
-    public void setEndminute(short endminute) {
-        this.endminute = endminute;
+    public void setEndminute(short endMinute) {
+        this.endMinute = endMinute;
     }
 
     

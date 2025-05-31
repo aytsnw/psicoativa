@@ -8,12 +8,18 @@ import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.service.LoginService;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 public class LoginServlet extends HttpServlet{
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response){
+        RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
+    }
+    
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response){
         HttpSession session = request.getSession();

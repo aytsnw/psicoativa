@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
-import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.dto.PsychologistDto;
+import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.service.RegisterService;
 
@@ -31,7 +31,7 @@ public class PsychologistServlet extends HttpServlet{
         try {
             rService.registerPsychologist(uDto, pDto);
             response.setStatus(200);
-            out.println("Client registered!");
+            out.println("Psychologist registered!");
         } catch (ServiceFailedException e) {
             response.setStatus(400);
             out.println(e.getMessage());
@@ -64,5 +64,4 @@ public class PsychologistServlet extends HttpServlet{
         uDto.setType(params.get("type")[0]);
         return uDto;
     }
-    
 }

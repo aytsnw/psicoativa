@@ -10,6 +10,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class RegisterServlet extends HttpServlet{
     @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        RequestDispatcher rd = request.getRequestDispatcher("register.jsp");
+        rd.forward(request, response);
+    }
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         if (request.getParameter("type").equals("client")){
             RequestDispatcher rd = request.getRequestDispatcher("/client");

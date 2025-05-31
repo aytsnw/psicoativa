@@ -53,6 +53,8 @@ public class AppointmentServlet extends HttpServlet{
             endMinute = Short.parseShort(params.get("end_minute")[0]);
         } catch (NumberFormatException e){
             throw new BadRequestException("Bad request: day, year, month, start | end hour and start | end minute should be of type short.");
+        } catch (NullPointerException e){
+            throw new BadRequestException("Bad request: empty parameter.");
         }
 
         aDto.setClient(findClient(clientId));
