@@ -4,16 +4,30 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
+import com.psicoativa.App;
 import com.psicoativa.dto.PsychologistDto;
 import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.exception.ServiceFailedException;
+import com.psicoativa.service.LoginService;
+import com.psicoativa.service.PsychologistService;
 import com.psicoativa.service.RegisterService;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class PsychologistServlet extends HttpServlet{
+    private PsychologistService pService;
+    private RegisterService rService;
+
+    @Override
+    public void init() throws ServletException{
+        super.init();
+        this.pService = (PsychologistService) getServletContext().getAttribute(App.PSYCHOLOGIST_SERVICE_KEY);
+        this.rService = (RegisterService) getServletContext().getAttribute(App.REGISTER_SERVICE_KEY);
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response){
     }
@@ -24,7 +38,6 @@ public class PsychologistServlet extends HttpServlet{
         try {out = response.getWriter();} 
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
 
-        RegisterService rService = new RegisterService();
         Map<String, String[]> params = request.getParameterMap();
         PsychologistDto pDto = populatePsychologistDto(params);
         var uDto = populateUserAuthDto(params);

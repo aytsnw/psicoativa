@@ -8,13 +8,22 @@ import com.psicoativa.model.UserAuth;
 import com.psicoativa.repository.UserAuthRepository;
 
 public class UserAuthService {
+    private final UserAuthRepository uRepo;
+
+    public UserAuthService(UserAuthRepository uRepo){
+        this.uRepo = uRepo;
+    }
+
     public void saveUser(UserAuth user){
-        UserAuthRepository uRepo = new UserAuthRepository();
         try {
             uRepo.addToDb(user);
         } catch (InvalidDataException | DbOperationFailedException e) {
             throw new ServiceFailedException("Service failure: " + e.getMessage());
         }
+    }
+
+    public UserAuth getUserAuth(String email){
+        return uRepo.findByEmail(email);
     }
 
     public UserAuth parseDto(UserAuthDto uDto){

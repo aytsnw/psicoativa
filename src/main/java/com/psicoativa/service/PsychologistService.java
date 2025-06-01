@@ -8,8 +8,13 @@ import com.psicoativa.model.Psychologist;
 import com.psicoativa.repository.PsychologistRepository;
 
 public class PsychologistService {
+    PsychologistRepository pRepo;
+
+    public PsychologistService(PsychologistRepository pRepo){
+        this.pRepo = pRepo;
+    }
+
     public void savePsychologist(Psychologist psy) throws ServiceFailedException{
-        PsychologistRepository pRepo = new PsychologistRepository();
         try {
             pRepo.addToDb(psy);
         } catch (InvalidDataException | DbOperationFailedException e) {
@@ -18,7 +23,6 @@ public class PsychologistService {
     }
 
     public Psychologist getPsychologist(int id){
-        PsychologistRepository pRepo = new PsychologistRepository();
         try {
             return pRepo.findById(id);
         } catch (DbOperationFailedException e) {

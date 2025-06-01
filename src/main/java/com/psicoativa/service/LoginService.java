@@ -8,14 +8,18 @@ import com.psicoativa.exception.InvalidDataException;
 import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.exception.WrongCredentialsException;
 import com.psicoativa.model.UserAuth;
-import com.psicoativa.repository.UserAuthRepository;
 
 public class LoginService {
+    private final UserAuthService uService;
+
+    public LoginService(UserAuthService uService){
+        this.uService = uService;
+    }
+
     public UserAuthDto loginUser(UserAuthDto uDto){
-        UserAuthRepository userAuthRepo = new UserAuthRepository();
         try{
             UserAuth userAuth = parseDto(uDto);
-            userAuth = userAuthRepo.findByEmail(userAuth.getEmail());
+            userAuth = uService.getUserAuth(userAuth.getEmail());
             validatePassword(uDto, userAuth);
             return parseModel(userAuth);
         } catch (InvalidDataException | DbOperationFailedException | WrongCredentialsException e){

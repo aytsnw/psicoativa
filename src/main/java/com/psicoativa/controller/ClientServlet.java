@@ -2,10 +2,10 @@ package com.psicoativa.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.psicoativa.App;
 import com.psicoativa.dto.ClientDto;
 import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.exception.BadRequestException;
@@ -14,11 +14,22 @@ import com.psicoativa.model.Client;
 import com.psicoativa.service.ClientService;
 import com.psicoativa.service.RegisterService;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class ClientServlet extends HttpServlet{
+    private ClientService cService;
+    private RegisterService rService;
+
+    @Override
+    public void init() throws ServletException{
+        super.init();
+        this.cService = (ClientService) getServletContext().getAttribute(App.CLIENT_SERVICE_KEY);
+        this.rService = (RegisterService) getServletContext().getAttribute(App.REGISTER_SERVICE_KEY);
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response){
         PrintWriter out = null;
@@ -26,12 +37,11 @@ public class ClientServlet extends HttpServlet{
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
 
         ObjectMapper objMapper = new ObjectMapper();
-        ClientService cSerivce = new ClientService();
 
         int id;
         try {
             id = Integer.parseInt(request.getParameter("client_id"));
-            Client client = cSerivce.getClient(id);
+            Client client = cService.getClient(id);
             String json = objMapper.writeValueAsString(client);
             out.print(json);
             response.setStatus(200);
@@ -52,8 +62,6 @@ public class ClientServlet extends HttpServlet{
         PrintWriter out = null;
         try {out = response.getWriter();} 
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
-
-        RegisterService rService = new RegisterService();
 
         try {
             ClientDto cDto = populateClientDto(request);

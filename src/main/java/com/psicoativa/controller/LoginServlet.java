@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
+import com.psicoativa.App;
 import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.service.LoginService;
@@ -13,8 +14,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.ServletException;
 
 public class LoginServlet extends HttpServlet{
+    private LoginService lService;
+
+    @Override
+    public void init() throws ServletException{
+        super.init();
+        this.lService = (LoginService) getServletContext().getAttribute(App.LOGIN_SERVICE_KEY);
+    }
+
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response){
         RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
@@ -27,7 +37,6 @@ public class LoginServlet extends HttpServlet{
         try {out = response.getWriter();} 
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
 
-        LoginService lService = new LoginService();
         Map<String, String[]> params = request.getParameterMap();
 
         UserAuthDto uDto = new UserAuthDto();

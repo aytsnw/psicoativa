@@ -8,8 +8,13 @@ import com.psicoativa.model.Appointment;
 import com.psicoativa.repository.AppointmentRepository;
 
 public class AppointmentService {
+    private final AppointmentRepository aRepo;
+
+    public AppointmentService(AppointmentRepository aRepo){
+        this.aRepo = aRepo;
+    }
+
     public void saveAppointment(AppointmentDto aDto){
-        AppointmentRepository aRepo = new AppointmentRepository();
         try {
             Appointment ap = parseDto(aDto);
             if (!isTimeSlotFree(ap, aRepo)){

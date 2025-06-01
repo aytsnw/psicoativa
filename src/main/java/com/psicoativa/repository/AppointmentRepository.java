@@ -26,18 +26,18 @@ public class AppointmentRepository {
         }
     }
 
-    public Appointment findByEndHour(LocalDate date, Short time){
+    public Appointment findByEndHour(LocalDate date, Short hour){
         Session session = App.sf.openSession();
         Query query = session.createQuery("FROM Appointment a WHERE date = ?1 AND endHour = ?2", Appointment.class);
         query.setParameter(1, date);
-        query.setParameter(2, time);
+        query.setParameter(2, hour);
         List<Appointment> appointments = query.getResultList();
         if (!appointments.isEmpty()){
             return appointments.get(0);
         }
         query = session.createQuery("FROM Appointment a WHERE date = ?1 AND endHour = ?2", Appointment.class);
         query.setParameter(1, date);
-        query.setParameter(2, time + 1);
+        query.setParameter(2, hour + 1);
         appointments = query.getResultList();
         if (!appointments.isEmpty()){
             return appointments.get(0);

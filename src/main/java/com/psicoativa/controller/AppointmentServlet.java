@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.Map;
 
+import com.psicoativa.App;
 import com.psicoativa.dto.AppointmentDto;
 import com.psicoativa.exception.BadRequestException;
 import com.psicoativa.exception.ServiceFailedException;
@@ -14,14 +15,26 @@ import com.psicoativa.service.AppointmentService;
 import com.psicoativa.service.ClientService;
 import com.psicoativa.service.PsychologistService;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class AppointmentServlet extends HttpServlet{
+    private AppointmentService aService;
+    private ClientService cService;
+    private PsychologistService pService;
+
+    @Override
+    public void init() throws ServletException{
+        super.init();
+        this.aService = (AppointmentService) getServletContext().getAttribute(App.APPOINTMENT_SERVICE_KEY);
+        this.cService = (ClientService) getServletContext().getAttribute(App.CLIENT_SERVICE_KEY);
+        this.pService = (PsychologistService) getServletContext().getAttribute(App.PSYCHOLOGIST_SERVICE_KEY);
+    }
+
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response){
-        AppointmentService aService = new AppointmentService();
         Map<String, String[]> params = request.getParameterMap();
         PrintWriter out = null;
         try {out = response.getWriter();} 
@@ -68,12 +81,10 @@ public class AppointmentServlet extends HttpServlet{
     }
 
     private Client findClient(int id){
-        ClientService cService = new ClientService();
         return cService.getClient(id);
     }
 
     private Psychologist findPsychologist(int id){
-        PsychologistService pService = new PsychologistService();
         return pService.getPsychologist(id);
     }
 }

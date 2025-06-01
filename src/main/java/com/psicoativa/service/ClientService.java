@@ -8,6 +8,12 @@ import com.psicoativa.model.Client;
 import com.psicoativa.repository.ClientRepository;
 
 public class ClientService {
+    private final ClientRepository cRepo;
+
+    public ClientService(ClientRepository cRepo){
+        this.cRepo = cRepo;
+    }
+
     public void saveClient(Client client) throws ServiceFailedException{
         ClientRepository cRepo = new ClientRepository();
         try {
