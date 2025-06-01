@@ -15,7 +15,6 @@ public class ClientService {
     }
 
     public void saveClient(Client client) throws ServiceFailedException{
-        ClientRepository cRepo = new ClientRepository();
         try {
             cRepo.addToDb(client);
         } catch (InvalidDataException | DbOperationFailedException e) {
@@ -24,7 +23,6 @@ public class ClientService {
     }
 
     public Client getClient(int id){
-        ClientRepository cRepo = new ClientRepository();
         try {
             return cRepo.findById(id);
         } catch (DbOperationFailedException e) {

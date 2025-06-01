@@ -8,7 +8,7 @@ import com.psicoativa.model.Psychologist;
 import com.psicoativa.repository.PsychologistRepository;
 
 public class PsychologistService {
-    PsychologistRepository pRepo;
+    private final PsychologistRepository pRepo;
 
     public PsychologistService(PsychologistRepository pRepo){
         this.pRepo = pRepo;
