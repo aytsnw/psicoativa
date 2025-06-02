@@ -26,22 +26,16 @@ public class AppointmentRepository {
         }
     }
 
-    public Appointment findByEndHour(LocalDate date, Short hour){
+    public List<Appointment> findByRange(LocalDate date, int start, int end){
         Session session = App.sf.openSession();
-        Query query = session.createQuery("FROM Appointment a WHERE date = ?1 AND endHour = ?2", Appointment.class);
-        query.setParameter(1, date);
-        query.setParameter(2, hour);
-        List<Appointment> appointments = query.getResultList();
-        if (!appointments.isEmpty()){
-            return appointments.get(0);
-        }
-        query = session.createQuery("FROM Appointment a WHERE date = ?1 AND endHour = ?2", Appointment.class);
-        query.setParameter(1, date);
-        query.setParameter(2, hour + 1);
-        appointments = query.getResultList();
-        if (!appointments.isEmpty()){
-            return appointments.get(0);
-        }
-        return null;
+        Query query = session.createQuery("FROM Appointment a WHERE date = :date AND ("+
+                                                            "(startTimeId >= :start AND startTimeId <= :end) OR" +
+                                                            "(endTimeId >= :start AND endTimeId <= :end))", Appointment.class);
+
+        query.setParameter("date", date);
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        session.close();
+        return query.getResultList();
     }
 }

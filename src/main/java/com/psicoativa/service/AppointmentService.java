@@ -27,13 +27,9 @@ public class AppointmentService {
     }
 
     private boolean isTimeSlotFree(Appointment ap, AppointmentRepository aRepo){
-        Integer startTimeCandidate = Integer.valueOf(ap.getStartHour().toString() + ap.getStartMinute().toString());
-        Integer endTimeCandidate = Integer.valueOf(ap.getEndHour().toString() + ap.getEndMinute().toString());
-        Appointment apCompare = aRepo.findByEndHour(ap.getDate(), ap.getStartHour());
-        if (apCompare == null){return true;}
-        Integer startTimeCompare = Integer.valueOf(apCompare.getStartHour().toString() + apCompare.getStartMinute().toString());
-        Integer endTimeCompare= Integer.valueOf(apCompare.getEndHour().toString() + apCompare.getEndMinute().toString());
-        return !(startTimeCandidate <= endTimeCompare && endTimeCandidate >= startTimeCompare);
+        int start = ap.getStartTimeId();
+        int end = ap.getEndTimeId();
+        return aRepo.findByRange(ap.getDate(), start, end).isEmpty();
     }
 
     private Appointment parseDto(AppointmentDto aDto) throws InvalidDataException{
@@ -45,6 +41,12 @@ public class AppointmentService {
         ap.setEndHour(aDto.getEndHour());
         ap.setStartMinute(aDto.getStartMinute());
         ap.setEndminute(aDto.getEndminute());
+        ap.setStartTimeId();
+        ap.setEndTimeId();
+        int duration = ap.getDurationMinutes();
+        if (duration > ap.MAX_DURATION_MINUTES || duration < ap.MIN_DURATION_MINUTES){
+            throw new InvalidDataException("Invalid data: appointment length exceeds time limit (59 min)");
+        }
         return ap;
     }
 }
