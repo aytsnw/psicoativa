@@ -30,6 +30,7 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "psychologist_id")
     private UserBase psychologist;
+    private String status = "active"; 
     
     private LocalDate date;
     private short startHour;
@@ -57,6 +58,12 @@ public class Appointment {
     }
     public void setPsychologist(UserBase psychologist) {
         this.psychologist = psychologist;
+    }
+    public void setStatus(String status){
+        this.status = status;
+    }
+    public String getStatus(String status){
+        return this.status;
     }
     public LocalDate getDate() {
         return date;

@@ -2,13 +2,12 @@ package com.psicoativa.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
 import com.psicoativa.App;
 import com.psicoativa.dto.PsychologistDto;
 import com.psicoativa.dto.UserAuthDto;
+import com.psicoativa.exception.BadRequestException;
 import com.psicoativa.exception.ServiceFailedException;
-import com.psicoativa.service.LoginService;
 import com.psicoativa.service.PsychologistService;
 import com.psicoativa.service.RegisterService;
 
@@ -29,8 +28,7 @@ public class PsychologistServlet extends HttpServlet{
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response){
-    }
+    protected void doGet(HttpServletRequest request, HttpServletResponse response){}
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
@@ -38,43 +36,52 @@ public class PsychologistServlet extends HttpServlet{
         try {out = response.getWriter();} 
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
 
-        Map<String, String[]> params = request.getParameterMap();
-        PsychologistDto pDto = populatePsychologistDto(params);
-        var uDto = populateUserAuthDto(params);
         try {
+            PsychologistDto pDto = populatePsychologistDto(request);
+            UserAuthDto uDto = populateUserAuthDto(request);
             rService.registerPsychologist(uDto, pDto);
             response.setStatus(200);
             out.println("Psychologist registered!");
-        } catch (ServiceFailedException e) {
+        } catch (ServiceFailedException | BadRequestException e) {
             response.setStatus(400);
             out.println(e.getMessage());
         }
     }
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response){
-
-    }
+    protected void doPut(HttpServletRequest request, HttpServletResponse response){}
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response){
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response){}
 
-    }
-
-    private PsychologistDto populatePsychologistDto(Map<String, String[]> params){
+    private PsychologistDto populatePsychologistDto(HttpServletRequest request) throws BadRequestException{
         PsychologistDto pDto = new PsychologistDto();
-        pDto.setName(params.get("name")[0]);
-        pDto.setCrp((params.get("crp")[0]));
-        pDto.setPhone(params.get("phone")[0]);
-        pDto.setEmail(params.get("email")[0]);
+        String name = request.getParameter("name");
+        String crp = request.getParameter("crp");
+        String phone = request.getParameter("phone");
+        String email =request.getParameter("email");
+        if (name.isEmpty()) throw new BadRequestException("Bad request: 'name' is empty");
+        if (crp.isEmpty()) throw new BadRequestException("Bad request: 'crp' is empty");
+        if (phone.isEmpty()) throw new BadRequestException("Bad request: 'phone' is empty");
+        if (email.isEmpty()) throw new BadRequestException("Bad request: 'email' is empty");
+        pDto.setName(name);
+        pDto.setCrp(crp);
+        pDto.setPhone(phone);
+        pDto.setEmail(email);
         return pDto;
     }
 
-    private UserAuthDto populateUserAuthDto(Map<String, String[]> params){
+    private UserAuthDto populateUserAuthDto(HttpServletRequest request) throws BadRequestException {
         UserAuthDto uDto = new UserAuthDto();
-        uDto.setEmail(params.get("email")[0]);
-        uDto.setPassword(params.get("password")[0]);
-        uDto.setType(params.get("type")[0]);
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String type = request.getParameter("type");
+        if (email.isEmpty()) throw new BadRequestException("Bad request: 'email' is empty");
+        if (password.isEmpty()) throw new BadRequestException("Bad request: 'crp' is empty");
+        if (type.isEmpty()) throw new BadRequestException("Bad request: 'type' is empty");
+        uDto.setEmail(email);
+        uDto.setPassword(password);
+        uDto.setType(type);
         return uDto;
     }
 }

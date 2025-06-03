@@ -3,7 +3,6 @@ package com.psicoativa.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
-import java.util.Map;
 
 import com.psicoativa.App;
 import com.psicoativa.dto.AppointmentDto;
@@ -34,13 +33,43 @@ public class AppointmentServlet extends HttpServlet{
     }
 
     @Override
+    public void doPut(HttpServletRequest request, HttpServletResponse response){
+        PrintWriter out = null;
+        try {out = response.getWriter();} 
+        catch (IOException e) {e.printStackTrace();response.setStatus(500);}
+
+        try{
+            String operation = request.getParameter("operation");
+            String appointmentIdString = request.getParameter("appointment_id");
+            if (operation == null | operation.isEmpty()) throw new BadRequestException("Bad request: 'operation' is empty or null");
+            if (appointmentIdString == null | appointmentIdString.isEmpty()) throw new BadRequestException("Bad request: 'appointment_id' is empty or null");
+            Integer appointmentId = parseId(appointmentIdString);
+
+            if (operation.equals("cancel")){
+                aService.cancelAppointment(appointmentId);
+                response.setStatus(200);
+                out.print("Appointment canceled.");
+            }
+            else throw new BadRequestException("Bad Request: options are 'cancel'");
+        } catch (ServiceFailedException | BadRequestException e){
+            response.setStatus(400);
+            out.print(e.getMessage());
+        }
+    }
+
+    private Integer parseId(String idString){
+        try{return Integer.parseInt(idString);} catch (NumberFormatException e){
+            throw new BadRequestException("Bad request: id must be of type 'int'");
+        }
+    }
+
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response){
-        Map<String, String[]> params = request.getParameterMap();
         PrintWriter out = null;
         try {out = response.getWriter();} 
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
         try{
-            AppointmentDto aDto = populateDto(params);
+            AppointmentDto aDto = populateAppointmentDto(request);
             aService.saveAppointment(aDto);
             response.setStatus(200);
             out.println("Appointment scheduled!");
@@ -50,24 +79,22 @@ public class AppointmentServlet extends HttpServlet{
         }
     }
 
-    private AppointmentDto populateDto(Map<String, String[]> params){
+    private AppointmentDto populateAppointmentDto(HttpServletRequest request) throws BadRequestException {
         AppointmentDto aDto = new AppointmentDto();
         short day, year, month, startHour, endHour, startMinute, endMinute;
         int clientId, psychologistId;
         try{
-            clientId = Integer.parseInt(params.get("client_id")[0]);
-            psychologistId = Integer.parseInt(params.get("psychologist_id")[0]);
-            day = Short.parseShort(params.get("day")[0]);
-            year = Short.parseShort(params.get("year")[0]);
-            month = Short.parseShort(params.get("month")[0]);
-            startHour = Short.parseShort(params.get("start_hour")[0]);
-            endHour = Short.parseShort(params.get("end_hour")[0]);
-            startMinute = Short.parseShort(params.get("start_minute")[0]);
-            endMinute = Short.parseShort(params.get("end_minute")[0]);
+            clientId = Integer.parseInt(request.getParameter("client_id"));
+            psychologistId = Integer.parseInt(request.getParameter("psychologist_id"));
+            day = Short.parseShort(request.getParameter("day"));
+            year = Short.parseShort(request.getParameter("year"));
+            month = Short.parseShort(request.getParameter("month"));
+            startHour = Short.parseShort(request.getParameter("start_hour"));
+            endHour = Short.parseShort(request.getParameter("end_hour"));
+            startMinute = Short.parseShort(request.getParameter("start_minute"));
+            endMinute = Short.parseShort(request.getParameter("end_minute"));
         } catch (NumberFormatException e){
             throw new BadRequestException("Bad request: day, year, month, start | end hour and start | end minute should be of type short.");
-        } catch (NullPointerException e){
-            throw new BadRequestException("Bad request: empty parameter.");
         }
 
         aDto.setClient(findClient(clientId));

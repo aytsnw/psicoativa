@@ -2,19 +2,19 @@ package com.psicoativa.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
 import com.psicoativa.App;
 import com.psicoativa.dto.UserAuthDto;
+import com.psicoativa.exception.BadRequestException;
 import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.service.LoginService;
 
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.ServletException;
 
 public class LoginServlet extends HttpServlet{
     private LoginService lService;
@@ -36,26 +36,32 @@ public class LoginServlet extends HttpServlet{
         PrintWriter out = null;
         try {out = response.getWriter();} 
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
-
-        Map<String, String[]> params = request.getParameterMap();
-
-        UserAuthDto uDto = new UserAuthDto();
-        uDto.setEmail(params.get("email")[0]);
-        uDto.setPassword(params.get("password")[0]);
         try{
             out = response.getWriter();
+            UserAuthDto uDto = populateUserAuthDto(request);
             uDto = lService.loginUser(uDto);
             session.setAttribute("id", uDto.getId());
             session.setAttribute("email", uDto.getEmail());
             session.setAttribute("type", uDto.getType());
             response.setStatus(200);
             out.println("User logged in!");
-        } catch (ServiceFailedException e){
+        } catch (ServiceFailedException | BadRequestException e){
             out.println(e.getMessage());
             response.setStatus(400);
         } catch (IOException e){
             out.println("Internal Server Error");
             response.setStatus(500);
         }
+    }
+
+    private UserAuthDto populateUserAuthDto(HttpServletRequest request) throws BadRequestException{
+        UserAuthDto uDto = new UserAuthDto();
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        if (email.isEmpty()) throw new BadRequestException("Bad request: 'email' is empty");
+        if (password.isEmpty()) throw new BadRequestException("Bad request: 'password' is empty");
+        uDto.setEmail(email);
+        uDto.setPassword(password);
+        return uDto;
     }
 }

@@ -32,6 +32,12 @@ public class AppointmentService {
         return aRepo.findByRange(ap.getDate(), start, end).isEmpty();
     }
 
+    public void cancelAppointment(int appointmentId){
+        try{aRepo.makeCanceled(appointmentId);} catch(DbOperationFailedException e){
+            throw new ServiceFailedException("Service failure: Couldn't cancel appointment: " + e.getMessage());
+        }
+    }
+
     private Appointment parseDto(AppointmentDto aDto) throws InvalidDataException{
         Appointment ap = new Appointment();
         ap.setClient(aDto.getClient());

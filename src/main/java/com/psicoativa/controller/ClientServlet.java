@@ -82,7 +82,7 @@ public class ClientServlet extends HttpServlet{
     protected void doDelete(HttpServletRequest request, HttpServletResponse response){}
 
 
-    private ClientDto populateClientDto(HttpServletRequest request){
+    private ClientDto populateClientDto(HttpServletRequest request) throws BadRequestException{
         ClientDto cDto = new ClientDto();
         String name = request.getParameter("name");
         String cpf = request.getParameter("cpf");
@@ -99,7 +99,7 @@ public class ClientServlet extends HttpServlet{
         return cDto;
     }
 
-    private UserAuthDto populateUserAuthDto(HttpServletRequest request){
+    private UserAuthDto populateUserAuthDto(HttpServletRequest request) throws BadRequestException{
         UserAuthDto uDto = new UserAuthDto();
         String email = request.getParameter("email");
         String password = request.getParameter("password");

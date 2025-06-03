@@ -30,12 +30,24 @@ public class AppointmentRepository {
         try (Session session = App.sf.openSession()){
             Query query = session.createQuery("FROM Appointment a WHERE date = :date AND ("+
                                                                 "(startTimeId >= :start AND startTimeId <= :end) OR" +
-                                                                "(endTimeId >= :start AND endTimeId <= :end))", Appointment.class);
+                                                                "(endTimeId >= :start AND endTimeId <= :end)) AND" +
+                                                                "(status = 'active')", Appointment.class);
 
             query.setParameter("date", date);
             query.setParameter("start", start);
             query.setParameter("end", end);
             return query.getResultList();
         } 
+    }
+
+    public void makeCanceled(int appointmentId) throws DbOperationFailedException{
+        try (Session session = App.sf.openSession()){
+            Transaction tr = session.beginTransaction();
+            Query query = session.createQuery("UPDATE Appointment a SET a.status = 'canceled' WHERE a.id = :id");
+            query.setParameter("id", appointmentId);
+            int rowCount = query.executeUpdate();
+            tr.commit();
+            if (rowCount == 0) throw new DbOperationFailedException("Appointment not found.");
+        }
     }
 }
