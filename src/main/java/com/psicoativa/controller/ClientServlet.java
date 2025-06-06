@@ -13,6 +13,8 @@ import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.model.Client;
 import com.psicoativa.service.ClientService;
 import com.psicoativa.service.RegisterService;
+import com.psicoativa.util.ClientDtoPopulator;
+import com.psicoativa.util.UserAuthDtoPopulator;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -63,9 +65,12 @@ public class ClientServlet extends HttpServlet{
         try {out = response.getWriter();} 
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
 
+        ClientDtoPopulator cDtoPopulator = new ClientDtoPopulator();
+        UserAuthDtoPopulator uDtoPopulator = new UserAuthDtoPopulator();
+
         try {
-            ClientDto cDto = populateClientDto(request);
-            UserAuthDto uDto = populateUserAuthDto(request);
+            ClientDto cDto = cDtoPopulator.populate(request);
+            UserAuthDto uDto = uDtoPopulator.populate(request);
             rService.registerClient(uDto, cDto);
             response.setStatus(200);
             out.println("Client registered!");
@@ -80,36 +85,4 @@ public class ClientServlet extends HttpServlet{
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response){}
-
-
-    private ClientDto populateClientDto(HttpServletRequest request) throws BadRequestException{
-        ClientDto cDto = new ClientDto();
-        String name = request.getParameter("name");
-        String cpf = request.getParameter("cpf");
-        String phone = request.getParameter("phone");
-        String email = request.getParameter("email");
-        if (name.isEmpty()) throw new BadRequestException("Empty parameter: name");
-        if (cpf.isEmpty()) throw new BadRequestException("Empty parameter: cpf");
-        if (phone.isEmpty()) throw new BadRequestException("Empty parameter: phone");
-        if (email.isEmpty()) throw new BadRequestException("Empty parameter: email");
-        cDto.setName(name);
-        cDto.setCpf(cpf);
-        cDto.setPhone(phone);
-        cDto.setEmail(email);
-        return cDto;
-    }
-
-    private UserAuthDto populateUserAuthDto(HttpServletRequest request) throws BadRequestException{
-        UserAuthDto uDto = new UserAuthDto();
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String type = request.getParameter("type");
-        if (email.isEmpty()) throw new BadRequestException("Empty parameter: email");
-        if (password.isEmpty()) throw new BadRequestException("Empty parameter: password");
-        if (type.isEmpty()) throw new BadRequestException("Empty parameter: type");
-        uDto.setEmail(email);
-        uDto.setPassword(password);
-        uDto.setType(type);
-        return uDto;
-    }
 }
