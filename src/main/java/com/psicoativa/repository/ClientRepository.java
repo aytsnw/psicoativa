@@ -27,7 +27,7 @@ public class ClientRepository {
 
     public Client findById(int id){
         Session session = App.sf.openSession();
-        Query query = session.createQuery("FROM Client c JOIN UserBase u ON c.id = u.id WHERE c.id = ?1", Client.class);
+        Query query = session.createQuery("FROM Client WHERE id = ?1", Client.class);
         query.setParameter(1, id);
         List<Client> clients = query.getResultList();
         try {

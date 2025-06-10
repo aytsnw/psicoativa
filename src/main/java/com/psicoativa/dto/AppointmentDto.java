@@ -2,12 +2,13 @@ package com.psicoativa.dto;
 
 import java.time.LocalDate;
 
-import com.psicoativa.model.UserBase;
+import com.psicoativa.model.Client;
+import com.psicoativa.model.Psychologist;
 
 public class AppointmentDto {
     private int id;
-    private UserBase client;
-    private UserBase psychologist;
+    private Client client;
+    private Psychologist psychologist;
     
     private LocalDate date;
     private short startHour;
@@ -21,16 +22,16 @@ public class AppointmentDto {
     public void setId(int id) {
         this.id = id;
     }
-    public UserBase getClient() {
+    public Client getClient() {
         return client;
     }
-    public void setClient(UserBase client) {
+    public void setClient(Client client) {
         this.client = client;
     }
-    public UserBase getPsychologist() {
+    public Psychologist getPsychologist() {
         return psychologist;
     }
-    public void setPsychologist(UserBase psychologist) {
+    public void setPsychologist(Psychologist psychologist) {
         this.psychologist = psychologist;
     }
     public LocalDate getDate() {

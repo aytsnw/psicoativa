@@ -18,7 +18,7 @@ import jakarta.persistence.Transient;
 public class UserAuth {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    int id;
+    private int id;
     @Column(unique=true)
     private String email;
     @Transient

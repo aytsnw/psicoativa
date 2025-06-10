@@ -1,19 +1,15 @@
 package com.psicoativa.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.psicoativa.exception.InvalidDataException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -21,16 +17,14 @@ import jakarta.persistence.OneToOne;
 public class UserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
-    String name;
-    String phone;
+    private int id;
+    private String name;
+    private String phone;
     @Column(name="email", unique=true)
-    String email;
+    private String email;
     @OneToOne(mappedBy="userBase")
     @JsonIgnore
-    UserAuth userAuth;
-    @OneToMany(fetch = FetchType.EAGER)
-    List<Appointment> appointments;
+    private UserAuth userAuth;
 
     public void setName(String name) throws InvalidDataException{
         name = name.strip();
@@ -52,10 +46,6 @@ public class UserBase {
     public void setUserAuth(UserAuth userAuth){
         this.userAuth = userAuth;
     }
-    
-    public void setAppointments(List<Appointment> appointments){
-        this.appointments = appointments;
-    }
 
     public String getName(){
         return this.name;
@@ -68,9 +58,6 @@ public class UserBase {
     }
     public UserAuth getUserAuth(){
         return this.userAuth;
-    }
-    public List<Appointment> getAppointments(){
-        return this.appointments;
     }
     
 }

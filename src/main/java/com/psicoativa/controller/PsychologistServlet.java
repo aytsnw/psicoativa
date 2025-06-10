@@ -3,13 +3,19 @@ package com.psicoativa.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.psicoativa.App;
 import com.psicoativa.dto.PsychologistDto;
 import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.exception.BadRequestException;
 import com.psicoativa.exception.ServiceFailedException;
+import com.psicoativa.model.Psychologist;
 import com.psicoativa.service.PsychologistService;
 import com.psicoativa.service.RegisterService;
+import com.psicoativa.util.PsychologistDtoPopulator;
+import com.psicoativa.util.UserAuthDtoPopulator;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -28,7 +34,32 @@ public class PsychologistServlet extends HttpServlet{
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response){}
+    protected void doGet(HttpServletRequest request, HttpServletResponse response){
+        PrintWriter out = null;
+        try {out = response.getWriter();} 
+        catch (IOException e) {e.printStackTrace();response.setStatus(500);}
+
+        ObjectMapper objMapper = new ObjectMapper();
+        objMapper.registerModule(new JavaTimeModule());
+
+        int id;
+        try {
+            id = Integer.parseInt(request.getParameter("psychologist_id"));
+            Psychologist psy = pService.getPsychologist(id);
+            String json = objMapper.writeValueAsString(psy);
+            out.print(json);
+            response.setStatus(200);
+        } catch (NumberFormatException e){
+            out.println("Bad request: id must be of type integer and not empty.");
+            response.setStatus(400);
+        } catch (ServiceFailedException e) {
+            out.println(e.getMessage());
+            response.setStatus(400);
+        }catch (JsonProcessingException e){
+            out.print(e.getMessage());
+            response.setStatus(500);
+        }
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
@@ -36,9 +67,12 @@ public class PsychologistServlet extends HttpServlet{
         try {out = response.getWriter();} 
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
 
+        PsychologistDtoPopulator pDtoPopulator = new PsychologistDtoPopulator();
+        UserAuthDtoPopulator uDtoPopulator = new UserAuthDtoPopulator();
+
         try {
-            PsychologistDto pDto = populatePsychologistDto(request);
-            UserAuthDto uDto = populateUserAuthDto(request);
+            PsychologistDto pDto = pDtoPopulator.populate(request);
+            UserAuthDto uDto = uDtoPopulator.populate(request);
             rService.registerPsychologist(uDto, pDto);
             response.setStatus(200);
             out.println("Psychologist registered!");
@@ -54,34 +88,4 @@ public class PsychologistServlet extends HttpServlet{
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response){}
 
-    private PsychologistDto populatePsychologistDto(HttpServletRequest request) throws BadRequestException{
-        PsychologistDto pDto = new PsychologistDto();
-        String name = request.getParameter("name");
-        String crp = request.getParameter("crp");
-        String phone = request.getParameter("phone");
-        String email =request.getParameter("email");
-        if (name.isEmpty()) throw new BadRequestException("Bad request: 'name' is empty");
-        if (crp.isEmpty()) throw new BadRequestException("Bad request: 'crp' is empty");
-        if (phone.isEmpty()) throw new BadRequestException("Bad request: 'phone' is empty");
-        if (email.isEmpty()) throw new BadRequestException("Bad request: 'email' is empty");
-        pDto.setName(name);
-        pDto.setCrp(crp);
-        pDto.setPhone(phone);
-        pDto.setEmail(email);
-        return pDto;
-    }
-
-    private UserAuthDto populateUserAuthDto(HttpServletRequest request) throws BadRequestException {
-        UserAuthDto uDto = new UserAuthDto();
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String type = request.getParameter("type");
-        if (email.isEmpty()) throw new BadRequestException("Bad request: 'email' is empty");
-        if (password.isEmpty()) throw new BadRequestException("Bad request: 'crp' is empty");
-        if (type.isEmpty()) throw new BadRequestException("Bad request: 'type' is empty");
-        uDto.setEmail(email);
-        uDto.setPassword(password);
-        uDto.setType(type);
-        return uDto;
-    }
 }

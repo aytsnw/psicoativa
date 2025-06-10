@@ -50,7 +50,7 @@ public class AppointmentService {
         ap.setStartTimeId();
         ap.setEndTimeId();
         int duration = ap.getDurationMinutes();
-        if (duration > ap.MAX_DURATION_MINUTES || duration < ap.MIN_DURATION_MINUTES){
+        if (duration > Appointment.MAX_DURATION_MINUTES || duration < Appointment.MIN_DURATION_MINUTES){
             throw new InvalidDataException("Invalid data: appointment length exceeds time limit (59 min) or is less than min (29 min).");
         }
         return ap;

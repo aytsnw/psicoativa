@@ -8,6 +8,7 @@ import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.exception.BadRequestException;
 import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.service.LoginService;
+import com.psicoativa.util.UserAuthDtoPopulator;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -36,9 +37,12 @@ public class LoginServlet extends HttpServlet{
         PrintWriter out = null;
         try {out = response.getWriter();} 
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
+
+        UserAuthDtoPopulator uDtoPopulator = new UserAuthDtoPopulator();
+
         try{
             out = response.getWriter();
-            UserAuthDto uDto = populateUserAuthDto(request);
+            UserAuthDto uDto = uDtoPopulator.populate(request);
             uDto = lService.loginUser(uDto);
             session.setAttribute("id", uDto.getId());
             session.setAttribute("email", uDto.getEmail());
@@ -52,16 +56,5 @@ public class LoginServlet extends HttpServlet{
             out.println("Internal Server Error");
             response.setStatus(500);
         }
-    }
-
-    private UserAuthDto populateUserAuthDto(HttpServletRequest request) throws BadRequestException{
-        UserAuthDto uDto = new UserAuthDto();
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        if (email.isEmpty()) throw new BadRequestException("Bad request: 'email' is empty");
-        if (password.isEmpty()) throw new BadRequestException("Bad request: 'password' is empty");
-        uDto.setEmail(email);
-        uDto.setPassword(password);
-        return uDto;
     }
 }

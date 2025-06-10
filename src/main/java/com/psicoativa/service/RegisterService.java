@@ -28,7 +28,7 @@ public class RegisterService {
             cService.saveClient(client);
             uService.saveUser(user);
         } catch (DbOperationFailedException | InvalidDataException e) {
-            throw new ServiceFailedException("Violation of constraint: cpf or email already exists in database.");
+            throw new ServiceFailedException("Service Failure: " + e.getMessage());
         }
     }
 

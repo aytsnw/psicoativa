@@ -39,8 +39,8 @@ public class AppointmentServlet extends HttpServlet{
         try{
             String operation = request.getParameter("operation");
             String appointmentIdString = request.getParameter("appointment_id");
-            if (operation == null | operation.isEmpty()) throw new BadRequestException("Bad request: 'operation' is empty or null");
-            if (appointmentIdString == null | appointmentIdString.isEmpty()) throw new BadRequestException("Bad request: 'appointment_id' is empty or null");
+            if (operation == null || operation.isEmpty()) throw new BadRequestException("Bad request: 'operation' is empty or null");
+            if (appointmentIdString == null || appointmentIdString.isEmpty()) throw new BadRequestException("Bad request: 'appointment_id' is empty or null");
             Integer appointmentId = parseId(appointmentIdString);
 
             if (operation.equals("cancel")){
@@ -65,8 +65,9 @@ public class AppointmentServlet extends HttpServlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response){
         AppointmentDtoPopulator aDtoPopulator = new AppointmentDtoPopulator(cService, pService);
         PrintWriter out = null;
-        try {out = response.getWriter();} 
+        try {out = response.getWriter();}
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
+        
         try{
             AppointmentDto aDto = aDtoPopulator.populate(request);
             aService.saveAppointment(aDto);

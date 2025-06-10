@@ -2,6 +2,7 @@ package com.psicoativa.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.psicoativa.exception.InvalidDataException;
 
 import jakarta.persistence.Entity;
@@ -17,19 +18,22 @@ import jakarta.persistence.Transient;
 @Table(name = "appointments")
 public class Appointment {
     @Transient
-    public final short MAX_DURATION_MINUTES = 59;
+    public final static short MAX_DURATION_MINUTES = 59;
     @Transient
-    public final short MIN_DURATION_MINUTES = 29;
+    public final static short MIN_DURATION_MINUTES = 29;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
     @ManyToOne
     @JoinColumn(name = "client_id")
-    private UserBase client;
+    @JsonBackReference
+    private Client client;
     @ManyToOne
     @JoinColumn(name = "psychologist_id")
-    private UserBase psychologist;
+    @JsonBackReference
+    private Psychologist psychologist;
+    
     private String status = "active"; 
     
     private LocalDate date;
@@ -50,13 +54,13 @@ public class Appointment {
     public UserBase getClient() {
         return client;
     }
-    public void setClient(UserBase client) {
+    public void setClient(Client client) {
         this.client = client;
     }
     public UserBase getPsychologist() {
         return psychologist;
     }
-    public void setPsychologist(UserBase psychologist) {
+    public void setPsychologist(Psychologist psychologist) {
         this.psychologist = psychologist;
     }
     public void setStatus(String status){
