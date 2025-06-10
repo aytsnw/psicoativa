@@ -1,6 +1,8 @@
 package com.psicoativa.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.psicoativa.exception.InvalidDataException;
 
 import jakarta.persistence.Column;
@@ -14,6 +16,9 @@ import jakarta.persistence.OneToOne;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
+@JsonIdentityInfo(
+   generator = ObjectIdGenerators.PropertyGenerator.class,
+   property = "id")
 public class UserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +30,14 @@ public class UserBase {
     @OneToOne(mappedBy="userBase")
     @JsonIgnore
     private UserAuth userAuth;
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public int getId(){
+        return this.id;
+    }
 
     public void setName(String name) throws InvalidDataException{
         name = name.strip();
@@ -58,6 +71,19 @@ public class UserBase {
     }
     public UserAuth getUserAuth(){
         return this.userAuth;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("UserBase{");
+        sb.append("id=").append(id);
+        sb.append(", name=").append(name);
+        sb.append(", phone=").append(phone);
+        sb.append(", email=").append(email);
+        sb.append(", userAuth=").append(userAuth);
+        sb.append('}');
+        return sb.toString();
     }
     
 }

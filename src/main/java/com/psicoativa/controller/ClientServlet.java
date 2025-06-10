@@ -46,8 +46,7 @@ public class ClientServlet extends HttpServlet{
         try {
             id = Integer.parseInt(request.getParameter("client_id"));
             Client client = cService.getClient(id);
-            String json = objMapper.writeValueAsString(client);
-            out.print(json);
+            out.print(objMapper.writeValueAsString(client));
             response.setStatus(200);
         } catch (NumberFormatException e){
             out.println("Bad request: id must be of type integer and not empty.");

@@ -50,4 +50,10 @@ public class AppointmentRepository {
             if (rowCount == 0) throw new DbOperationFailedException("Appointment not found.");
         }
     }
+
+    public Appointment findById(int id){
+        try (Session session = App.sf.openSession()){
+            return session.get(Appointment.class, id);
+        }
+    }
 }

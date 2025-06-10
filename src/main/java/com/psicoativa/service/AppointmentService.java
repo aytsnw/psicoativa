@@ -26,6 +26,12 @@ public class AppointmentService {
         }
     }
 
+    public Appointment getAppointment(int id) throws ServiceFailedException{
+        Appointment ap = aRepo.findById(id);
+        if (ap == null) throw new ServiceFailedException("Service failure: appointment not found with id: " + id);
+        return ap;
+    }
+
     private boolean isTimeSlotFree(Appointment ap, AppointmentRepository aRepo){
         int start = ap.getStartTimeId();
         int end = ap.getEndTimeId();

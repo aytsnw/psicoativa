@@ -3,10 +3,14 @@ package com.psicoativa.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.psicoativa.App;
 import com.psicoativa.dto.AppointmentDto;
 import com.psicoativa.exception.BadRequestException;
 import com.psicoativa.exception.ServiceFailedException;
+import com.psicoativa.model.Appointment;
 import com.psicoativa.service.AppointmentService;
 import com.psicoativa.service.ClientService;
 import com.psicoativa.service.PsychologistService;
@@ -28,6 +32,32 @@ public class AppointmentServlet extends HttpServlet{
         this.aService = (AppointmentService) getServletContext().getAttribute(App.APPOINTMENT_SERVICE_KEY);
         this.cService = (ClientService) getServletContext().getAttribute(App.CLIENT_SERVICE_KEY);
         this.pService = (PsychologistService) getServletContext().getAttribute(App.PSYCHOLOGIST_SERVICE_KEY);
+    }
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response){
+        PrintWriter out = null;
+        try {out = response.getWriter();} 
+        catch (IOException e) {e.printStackTrace();response.setStatus(500);}
+
+        ObjectMapper objMapper = new ObjectMapper();
+        objMapper.registerModule(new JavaTimeModule());
+
+
+        try {
+            String appointmentIdString = request.getParameter("appointment_id");
+            if (appointmentIdString == null || appointmentIdString.isEmpty()) throw new BadRequestException("Bad request: 'appointment_id' is empty or null");
+            Integer appointmentId = parseId(appointmentIdString);
+            Appointment appointment = aService.getAppointment(appointmentId);
+            out.print(objMapper.writeValueAsString(appointment));
+            response.setStatus(200);
+        } catch (BadRequestException | ServiceFailedException e) {
+            out.print("Bad request: " + e.getMessage());
+            response.setStatus(400);
+        } catch (JsonProcessingException e){
+            e.printStackTrace();
+            response.setStatus(500);
+        }
     }
 
     @Override
@@ -55,12 +85,6 @@ public class AppointmentServlet extends HttpServlet{
         }
     }
 
-    private Integer parseId(String idString){
-        try{return Integer.parseInt(idString);} catch (NumberFormatException e){
-            throw new BadRequestException("Bad request: id must be of type 'int'");
-        }
-    }
-
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response){
         AppointmentDtoPopulator aDtoPopulator = new AppointmentDtoPopulator(cService, pService);
@@ -76,6 +100,12 @@ public class AppointmentServlet extends HttpServlet{
         } catch (BadRequestException | ServiceFailedException e){
             out.println(e.getMessage());
             response.setStatus(400);
+        }
+    }
+
+    private Integer parseId(String idString){
+        try{return Integer.parseInt(idString);} catch (NumberFormatException e){
+            throw new BadRequestException("Bad request: id must be of type 'int'");
         }
     }
 }

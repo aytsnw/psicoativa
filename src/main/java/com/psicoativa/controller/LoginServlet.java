@@ -33,10 +33,11 @@ public class LoginServlet extends HttpServlet{
     
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response){
-        HttpSession session = request.getSession();
         PrintWriter out = null;
         try {out = response.getWriter();} 
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
+
+        HttpSession session = request.getSession();
 
         UserAuthDtoPopulator uDtoPopulator = new UserAuthDtoPopulator();
 

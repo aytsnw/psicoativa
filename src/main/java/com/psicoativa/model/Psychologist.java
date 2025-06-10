@@ -2,7 +2,6 @@ package com.psicoativa.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.psicoativa.exception.InvalidDataException;
 
 import jakarta.persistence.Column;
@@ -16,9 +15,16 @@ import jakarta.persistence.Table;
 public class Psychologist extends UserBase{
     @Column(name = "crp", unique = true)
     private String crp;
+
     @OneToMany(mappedBy="psychologist", fetch = FetchType.EAGER)
-    @JsonManagedReference
     private List<Appointment> appointments;
+
+    public void setAppointments(List<Appointment> appointments){
+        this.appointments = appointments;
+    }
+    public List<Appointment> getAppointments(){
+        return this.appointments;
+    }
 
     public void setCrp(String crp){
         if (crp.isEmpty()) throw new InvalidDataException("Invalid client cpf: empty");
@@ -28,15 +34,12 @@ public class Psychologist extends UserBase{
     public String getCrp(){
         return this.crp;
     }
-    public void setAppointments(List<Appointment> appointments){
-        this.appointments = appointments;
-    }
-    public List<Appointment> getAppointments(){
-        return this.appointments;
-    }
-
     private boolean isValidCrp(String crp){
         //todo
         return true;
+    }
+    @Override
+    public String toString() {
+        return "Psychologist [crp=" + crp + "]";
     }
 }
