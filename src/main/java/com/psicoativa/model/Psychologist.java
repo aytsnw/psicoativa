@@ -2,6 +2,8 @@ package com.psicoativa.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.psicoativa.exception.InvalidDataException;
 
 import jakarta.persistence.Column;
@@ -37,9 +39,5 @@ public class Psychologist extends UserBase{
     private boolean isValidCrp(String crp){
         //todo
         return true;
-    }
-    @Override
-    public String toString() {
-        return "Psychologist [crp=" + crp + "]";
     }
 }

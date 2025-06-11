@@ -2,6 +2,8 @@ package com.psicoativa.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.psicoativa.exception.InvalidDataException;
 import com.psicoativa.util.CpfValidator;
 
@@ -40,14 +42,5 @@ public class Client extends UserBase{
     private boolean isValidCpf(String cpf){
         CpfValidator cpfValidator = new CpfValidator();
         return cpfValidator.validate(cpf);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Client{");
-        sb.append("cpf=").append(cpf);
-        sb.append('}');
-        return sb.toString();
     }
 }

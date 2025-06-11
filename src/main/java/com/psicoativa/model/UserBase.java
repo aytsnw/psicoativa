@@ -72,18 +72,4 @@ public class UserBase {
     public UserAuth getUserAuth(){
         return this.userAuth;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("UserBase{");
-        sb.append("id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", phone=").append(phone);
-        sb.append(", email=").append(email);
-        sb.append(", userAuth=").append(userAuth);
-        sb.append('}');
-        return sb.toString();
-    }
-    
 }

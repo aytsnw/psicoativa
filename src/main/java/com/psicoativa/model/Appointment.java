@@ -18,8 +18,8 @@ import jakarta.persistence.Transient;
 @Entity
 @Table(name = "appointments")
 @JsonIdentityInfo(
-   generator = ObjectIdGenerators.PropertyGenerator.class,
-   property = "id")
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Appointment {
     @Transient
     public final static short MAX_DURATION_MINUTES = 59;
@@ -122,24 +122,5 @@ public class Appointment {
     
     public int getDurationMinutes(){
         return this.endTimeId - this.startTimeId;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Appointment{");
-        sb.append("id=").append(id);
-        sb.append(", client=").append(client);
-        sb.append(", psychologist=").append(psychologist);
-        sb.append(", status=").append(status);
-        sb.append(", date=").append(date);
-        sb.append(", startHour=").append(startHour);
-        sb.append(", startMinute=").append(startMinute);
-        sb.append(", endHour=").append(endHour);
-        sb.append(", endMinute=").append(endMinute);
-        sb.append(", startTimeId=").append(startTimeId);
-        sb.append(", endTimeId=").append(endTimeId);
-        sb.append('}');
-        return sb.toString();
     }
 }

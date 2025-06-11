@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.psicoativa.App;
 import com.psicoativa.dto.ClientDto;
@@ -40,6 +41,7 @@ public class ClientServlet extends HttpServlet{
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
 
         ObjectMapper objMapper = new ObjectMapper();
+        objMapper.enable(SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID);
         objMapper.registerModule(new JavaTimeModule());
 
         int id;

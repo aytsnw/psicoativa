@@ -43,7 +43,6 @@ public class AppointmentServlet extends HttpServlet{
         ObjectMapper objMapper = new ObjectMapper();
         objMapper.registerModule(new JavaTimeModule());
 
-
         try {
             String appointmentIdString = request.getParameter("appointment_id");
             if (appointmentIdString == null || appointmentIdString.isEmpty()) throw new BadRequestException("Bad request: 'appointment_id' is empty or null");
