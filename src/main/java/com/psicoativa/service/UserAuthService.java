@@ -6,6 +6,7 @@ import com.psicoativa.exception.InvalidDataException;
 import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.model.UserAuth;
 import com.psicoativa.repository.UserAuthRepository;
+import com.psicoativa.util.UserAuthDtoPopulator;
 
 public class UserAuthService {
     private final UserAuthRepository uRepo;
@@ -24,6 +25,13 @@ public class UserAuthService {
 
     public UserAuth getUserAuth(String email){
         return uRepo.findByEmail(email);
+    }
+
+    public UserAuthDto getUserAuthDto(String email){
+        UserAuthDtoPopulator uDtoPopulator = new UserAuthDtoPopulator();
+        UserAuth uAuth = uRepo.findByEmail(email);
+        if (uAuth == null) throw new ServiceFailedException("Service Failure: Couldn't find user of email: "+ email);
+        return uDtoPopulator.populate(uAuth);
     }
 
     public UserAuth parseDto(UserAuthDto uDto){

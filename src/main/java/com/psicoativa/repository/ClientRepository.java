@@ -26,16 +26,8 @@ public class ClientRepository {
     }
 
     public Client findById(int id){
-        Session session = App.sf.openSession();
-        Query query = session.createQuery("FROM Client WHERE id = ?1", Client.class);
-        query.setParameter(1, id);
-        List<Client> clients = query.getResultList();
-        try {
-            return clients.get(0);
-        } catch (IndexOutOfBoundsException e) {
-            throw new DbOperationFailedException("Id not registered in database.");
-        } finally {
-            session.close();
+        try (Session session = App.sf.openSession()) {
+            return session.get(Client.class, id);
         }
     }
 }

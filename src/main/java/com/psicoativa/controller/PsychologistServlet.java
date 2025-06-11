@@ -45,8 +45,8 @@ public class PsychologistServlet extends HttpServlet{
         int id;
         try {
             id = Integer.parseInt(request.getParameter("psychologist_id"));
-            Psychologist psy = pService.getPsychologist(id);
-            out.print(objMapper.writeValueAsString(psy));
+            PsychologistDto pDto = pService.getPsychologistDto(id);
+            out.print(objMapper.writeValueAsString(pDto));
             response.setStatus(200);
         } catch (NumberFormatException e){
             out.println("Bad request: id must be of type integer and not empty.");

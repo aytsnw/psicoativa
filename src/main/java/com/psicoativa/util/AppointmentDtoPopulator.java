@@ -2,8 +2,11 @@ package com.psicoativa.util;
 
 import java.time.LocalDate;
 
+import com.psicoativa.core.Dto;
+import com.psicoativa.core.Model;
 import com.psicoativa.dto.AppointmentDto;
 import com.psicoativa.exception.BadRequestException;
+import com.psicoativa.model.Appointment;
 import com.psicoativa.model.Client;
 import com.psicoativa.model.Psychologist;
 import com.psicoativa.service.ClientService;
@@ -11,18 +14,15 @@ import com.psicoativa.service.PsychologistService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-public class AppointmentDtoPopulator implements DtoPopulator<AppointmentDto>{
-    private final ClientService cService;
-    private final PsychologistService pService;
+public class AppointmentDtoPopulator implements DtoPopulator<Appointment>{
+    private final AppointmentDto aDto;
 
-    public AppointmentDtoPopulator(ClientService cService, PsychologistService pService){
-        this.cService = cService;
-        this.pService = pService;
+    public AppointmentDtoPopulator(){
+        this.aDto = new AppointmentDto();
     }
 
     @Override
     public AppointmentDto populate(HttpServletRequest request) throws BadRequestException {
-        AppointmentDto aDto = new AppointmentDto();
         short day, year, month, startHour, endHour, startMinute, endMinute;
         int clientId, psychologistId;
         try{
@@ -39,22 +39,32 @@ public class AppointmentDtoPopulator implements DtoPopulator<AppointmentDto>{
             throw new BadRequestException("Bad request: day, year, month, start | end hour and start | end minute should be of type short.");
         }
 
-        aDto.setClient(findClient(clientId));
-        aDto.setPsychologist(findPsychologist(psychologistId));
+        aDto.setClientId(clientId);
+        aDto.setPsychologistId(psychologistId);
         aDto.setDate(LocalDate.of(year, month, day));
         aDto.setStartHour(startHour);
         aDto.setEndHour(endHour);
         aDto.setStartMinute(startMinute);
-        aDto.setEndminute(endMinute);
+        aDto.setEndMinute(endMinute);
         return aDto;
     }
 
-    private Client findClient(int id){
-        return cService.getClient(id);
-    }
-
-    private Psychologist findPsychologist(int id){
-        return pService.getPsychologist(id);
+    @Override
+    public AppointmentDto populate(Appointment model){
+        int clientId, psychologistId;
+        Client client = model.getClient();
+        Psychologist psy = model.getPsychologist();
+        clientId = client.getId();
+        psychologistId = psy.getId();
+        aDto.setId(model.getId());
+        aDto.setClientId(clientId);
+        aDto.setPsychologistId(psychologistId);
+        aDto.setDate(model.getDate());
+        aDto.setStartHour(model.getStartHour());
+        aDto.setEndHour(model.getEndHour());
+        aDto.setStartMinute(model.getStartMinute());
+        aDto.setEndMinute(model.getEndMinute());
+        return aDto;
     }
     
 }

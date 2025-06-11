@@ -41,14 +41,14 @@ public class ClientServlet extends HttpServlet{
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
 
         ObjectMapper objMapper = new ObjectMapper();
-        objMapper.enable(SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID);
+        objMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objMapper.registerModule(new JavaTimeModule());
 
         int id;
         try {
             id = Integer.parseInt(request.getParameter("client_id"));
-            Client client = cService.getClient(id);
-            out.print(objMapper.writeValueAsString(client));
+            ClientDto cDto = cService.getClientDto(id);
+            out.print(objMapper.writeValueAsString(cDto));
             response.setStatus(200);
         } catch (NumberFormatException e){
             out.println("Bad request: id must be of type integer and not empty.");
@@ -57,7 +57,7 @@ public class ClientServlet extends HttpServlet{
             out.println(e.getMessage());
             response.setStatus(400);
         }catch (JsonProcessingException e){
-            out.print(e.getMessage());
+            e.printStackTrace();
             response.setStatus(500);
         }
     }

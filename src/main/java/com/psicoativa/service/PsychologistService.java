@@ -6,6 +6,7 @@ import com.psicoativa.exception.InvalidDataException;
 import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.model.Psychologist;
 import com.psicoativa.repository.PsychologistRepository;
+import com.psicoativa.util.PsychologistDtoPopulator;
 
 public class PsychologistService {
     private final PsychologistRepository pRepo;
@@ -23,11 +24,17 @@ public class PsychologistService {
     }
 
     public Psychologist getPsychologist(int id){
-        try {
-            return pRepo.findById(id);
-        } catch (DbOperationFailedException e) {
-            throw new ServiceFailedException("Service Failure: Couldn't find psychologist of id: " + id);
-        }
+        Psychologist psy = pRepo.findById(id);
+        if (psy == null) throw new ServiceFailedException("Service failure: Couldn't find psychologist of id: "+ id);
+        return pRepo.findById(id);
+    }
+
+    public PsychologistDto getPsychologistDto(int id){
+        PsychologistDtoPopulator pDtoPopulator = new PsychologistDtoPopulator();
+        Psychologist psy = pRepo.findById(id);
+        if (psy == null) throw new ServiceFailedException("Service failure: Couldn't find psychologist of id: "+ id);
+        pDtoPopulator.populate(psy);
+        return pDtoPopulator.populate(psy);
     }
     
     public Psychologist parseDto(PsychologistDto pDto) throws InvalidDataException{

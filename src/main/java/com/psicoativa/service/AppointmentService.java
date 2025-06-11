@@ -5,13 +5,20 @@ import com.psicoativa.exception.DbOperationFailedException;
 import com.psicoativa.exception.InvalidDataException;
 import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.model.Appointment;
+import com.psicoativa.model.Client;
+import com.psicoativa.model.Psychologist;
 import com.psicoativa.repository.AppointmentRepository;
+import com.psicoativa.util.AppointmentDtoPopulator;
 
 public class AppointmentService {
     private final AppointmentRepository aRepo;
+    private final ClientService cService;
+    private final PsychologistService pService;
 
-    public AppointmentService(AppointmentRepository aRepo){
+    public AppointmentService(AppointmentRepository aRepo, ClientService cService, PsychologistService pService){
         this.aRepo = aRepo;
+        this.cService = cService;
+        this.pService = pService;
     }
 
     public void saveAppointment(AppointmentDto aDto){
@@ -26,10 +33,11 @@ public class AppointmentService {
         }
     }
 
-    public Appointment getAppointment(int id) throws ServiceFailedException{
+    public AppointmentDto getAppointmentDto(int id) throws ServiceFailedException{
+        AppointmentDtoPopulator aDtoPopulator = new AppointmentDtoPopulator();
         Appointment ap = aRepo.findById(id);
         if (ap == null) throw new ServiceFailedException("Service failure: appointment not found with id: " + id);
-        return ap;
+        return aDtoPopulator.populate(ap);
     }
 
     private boolean isTimeSlotFree(Appointment ap, AppointmentRepository aRepo){
@@ -46,13 +54,15 @@ public class AppointmentService {
 
     private Appointment parseDto(AppointmentDto aDto) throws InvalidDataException{
         Appointment ap = new Appointment();
-        ap.setClient(aDto.getClient());
-        ap.setPsychologist(aDto.getPsychologist());
+        Client client = cService.getClient(aDto.getClientId());
+        Psychologist psychologist = pService.getPsychologist(aDto.getPsychologistId());
+        ap.setClient(client);
+        ap.setPsychologist(psychologist);
         ap.setDate(aDto.getDate());
         ap.setStartHour(aDto.getStartHour());
         ap.setEndHour(aDto.getEndHour());
         ap.setStartMinute(aDto.getStartMinute());
-        ap.setEndminute(aDto.getEndminute());
+        ap.setEndMinute(aDto.getEndMinute());
         ap.setStartTimeId();
         ap.setEndTimeId();
         int duration = ap.getDurationMinutes();

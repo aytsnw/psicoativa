@@ -1,6 +1,8 @@
 package com.psicoativa.dto;
 
-public class UserAuthDto {
+import com.psicoativa.core.Dto;
+
+public class UserAuthDto extends Dto {
     int id;
     String email;
     String password;

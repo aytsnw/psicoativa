@@ -1,14 +1,20 @@
 package com.psicoativa.util;
 
+import com.psicoativa.core.Dto;
 import com.psicoativa.dto.ClientDto;
 import com.psicoativa.exception.BadRequestException;
 
+import com.psicoativa.model.Client;
 import jakarta.servlet.http.HttpServletRequest;
 
-public class ClientDtoPopulator implements DtoPopulator<ClientDto>{
+public class ClientDtoPopulator implements DtoPopulator<Client>{
+    private final ClientDto cDto;
+
+    public ClientDtoPopulator(){
+        this.cDto = new ClientDto();
+    }
     @Override
     public ClientDto populate(HttpServletRequest request){
-        ClientDto cDto = new ClientDto();
         String name = request.getParameter("name");
         String cpf = request.getParameter("cpf");
         String phone = request.getParameter("phone");
@@ -24,5 +30,13 @@ public class ClientDtoPopulator implements DtoPopulator<ClientDto>{
         return cDto;
     }
 
-    
+    @Override
+    public ClientDto populate(Client model) {
+        cDto.setId(model.getId());
+        cDto.setName(model.getName());
+        cDto.setCpf(model.getCpf());
+        cDto.setPhone(model.getPhone());
+        cDto.setEmail(model.getEmail());
+        return cDto;
+    }
 }

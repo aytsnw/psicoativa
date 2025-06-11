@@ -4,17 +4,18 @@ import java.time.LocalDate;
 
 import com.psicoativa.model.Client;
 import com.psicoativa.model.Psychologist;
+import com.psicoativa.core.Dto;
 
-public class AppointmentDto {
+public class AppointmentDto extends Dto {
     private int id;
-    private Client client;
-    private Psychologist psychologist;
+    private int clientId;
+    private int psychologistId;
     
     private LocalDate date;
     private short startHour;
     private short startMinute;
     private short endHour;
-    private short endminute;
+    private short endMinute;
 
     public int getId() {
         return id;
@@ -22,17 +23,15 @@ public class AppointmentDto {
     public void setId(int id) {
         this.id = id;
     }
-    public Client getClient() {
-        return client;
+    public int getClientId() {return clientId;}
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
     }
-    public void setClient(Client client) {
-        this.client = client;
+    public int getPsychologistId() {
+        return this.psychologistId;
     }
-    public Psychologist getPsychologist() {
-        return psychologist;
-    }
-    public void setPsychologist(Psychologist psychologist) {
-        this.psychologist = psychologist;
+    public void setPsychologistId(int psychologistId) {
+        this.psychologistId = psychologistId;
     }
     public LocalDate getDate() {
         return date;
@@ -58,10 +57,10 @@ public class AppointmentDto {
     public void setEndHour(short endHour) {
         this.endHour = endHour;
     }
-    public short getEndminute() {
-        return endminute;
+    public short getEndMinute() {
+        return endMinute;
     }
-    public void setEndminute(short endminute) {
-        this.endminute = endminute;
+    public void setEndMinute(short endMinute) {
+        this.endMinute = endMinute;
     }
 }

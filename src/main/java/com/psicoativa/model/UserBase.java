@@ -16,9 +16,6 @@ import jakarta.persistence.OneToOne;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
-@JsonIdentityInfo(
-   generator = ObjectIdGenerators.PropertyGenerator.class,
-   property = "id")
 public class UserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +25,6 @@ public class UserBase {
     @Column(name="email", unique=true)
     private String email;
     @OneToOne(mappedBy="userBase")
-    @JsonIgnore
     private UserAuth userAuth;
 
     public void setId(int id){

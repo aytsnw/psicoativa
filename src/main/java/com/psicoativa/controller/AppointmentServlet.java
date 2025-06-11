@@ -10,10 +10,7 @@ import com.psicoativa.App;
 import com.psicoativa.dto.AppointmentDto;
 import com.psicoativa.exception.BadRequestException;
 import com.psicoativa.exception.ServiceFailedException;
-import com.psicoativa.model.Appointment;
 import com.psicoativa.service.AppointmentService;
-import com.psicoativa.service.ClientService;
-import com.psicoativa.service.PsychologistService;
 import com.psicoativa.util.AppointmentDtoPopulator;
 
 import jakarta.servlet.ServletException;
@@ -23,15 +20,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class AppointmentServlet extends HttpServlet{
     private AppointmentService aService;
-    private ClientService cService;
-    private PsychologistService pService;
 
     @Override
     public void init() throws ServletException{
         super.init();
         this.aService = (AppointmentService) getServletContext().getAttribute(App.APPOINTMENT_SERVICE_KEY);
-        this.cService = (ClientService) getServletContext().getAttribute(App.CLIENT_SERVICE_KEY);
-        this.pService = (PsychologistService) getServletContext().getAttribute(App.PSYCHOLOGIST_SERVICE_KEY);
     }
 
     @Override
@@ -47,8 +40,9 @@ public class AppointmentServlet extends HttpServlet{
             String appointmentIdString = request.getParameter("appointment_id");
             if (appointmentIdString == null || appointmentIdString.isEmpty()) throw new BadRequestException("Bad request: 'appointment_id' is empty or null");
             Integer appointmentId = parseId(appointmentIdString);
-            Appointment appointment = aService.getAppointment(appointmentId);
-            out.print(objMapper.writeValueAsString(appointment));
+            AppointmentDto aDto = aService.getAppointmentDto(appointmentId);
+            out.print(objMapper.writeValueAsString(aDto));
+            response.setHeader("Content-Type","application/json");
             response.setStatus(200);
         } catch (BadRequestException | ServiceFailedException e) {
             out.print("Bad request: " + e.getMessage());
@@ -86,7 +80,7 @@ public class AppointmentServlet extends HttpServlet{
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response){
-        AppointmentDtoPopulator aDtoPopulator = new AppointmentDtoPopulator(cService, pService);
+        AppointmentDtoPopulator aDtoPopulator = new AppointmentDtoPopulator();
         PrintWriter out = null;
         try {out = response.getWriter();}
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}

@@ -1,11 +1,19 @@
 package com.psicoativa.util;
 
+import com.psicoativa.core.Dto;
 import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.exception.BadRequestException;
 
+import com.psicoativa.model.UserAuth;
 import jakarta.servlet.http.HttpServletRequest;
 
-public class UserAuthDtoPopulator implements DtoPopulator<UserAuthDto>{
+public class UserAuthDtoPopulator implements DtoPopulator<UserAuth>{
+    private final UserAuthDto uDto;
+
+    public UserAuthDtoPopulator(){
+        this.uDto = new UserAuthDto();
+    }
+
     @Override
     public UserAuthDto populate(HttpServletRequest request){
         UserAuthDto uDto = new UserAuthDto();
@@ -20,5 +28,13 @@ public class UserAuthDtoPopulator implements DtoPopulator<UserAuthDto>{
         uDto.setType(type);
         return uDto;
     }
-    
+
+    @Override
+    public UserAuthDto populate(UserAuth model) {
+        uDto.setId(model.getId());
+        uDto.setEmail(model.getEmail());
+        uDto.setPassword(model.getPassword());
+        uDto.setType(model.getType());
+        return uDto;
+    }
 }

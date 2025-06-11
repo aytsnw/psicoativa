@@ -65,7 +65,7 @@ public class App implements ServletContextListener{
         UserAuthService uService = new UserAuthService(uRepo);
         ClientService cService = new ClientService(cRepo);
         PsychologistService pService = new PsychologistService(pRepo);
-        AppointmentService aService = new AppointmentService(aRepo);
+        AppointmentService aService = new AppointmentService(aRepo, cService, pService);
         RegisterService rService = new RegisterService(uService, cService, pService);
         LoginService lService = new LoginService(uService);
 

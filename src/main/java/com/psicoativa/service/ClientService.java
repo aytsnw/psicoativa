@@ -6,6 +6,7 @@ import com.psicoativa.exception.InvalidDataException;
 import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.model.Client;
 import com.psicoativa.repository.ClientRepository;
+import com.psicoativa.util.ClientDtoPopulator;
 
 public class ClientService {
     private final ClientRepository cRepo;
@@ -22,12 +23,17 @@ public class ClientService {
         }
     }
 
+    public ClientDto getClientDto(int id){
+        ClientDtoPopulator cDtoPopulator = new ClientDtoPopulator();
+        Client client = cRepo.findById(id);
+        if (client == null) throw new ServiceFailedException("Service failure: Couldn't find client of id: "+ id);
+        return cDtoPopulator.populate(cRepo.findById(id));
+    }
+
     public Client getClient(int id){
-        try {
-            return cRepo.findById(id);
-        } catch (DbOperationFailedException e) {
-            throw new ServiceFailedException("Service Failure: Couldn't find client of id: "+ id);
-        }
+        Client client = cRepo.findById(id);
+        if (client == null) throw new ServiceFailedException("Service failure: Couldn't find client of id: "+ id);
+        return client;
     }
     
     public Client parseDto(ClientDto clientDto) throws InvalidDataException{

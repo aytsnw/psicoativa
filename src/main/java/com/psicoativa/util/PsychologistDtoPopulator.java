@@ -1,14 +1,20 @@
 package com.psicoativa.util;
 
+import com.psicoativa.core.Dto;
 import com.psicoativa.dto.PsychologistDto;
 import com.psicoativa.exception.BadRequestException;
 
+import com.psicoativa.model.Psychologist;
 import jakarta.servlet.http.HttpServletRequest;
 
-public class PsychologistDtoPopulator implements DtoPopulator<PsychologistDto>{
+public class PsychologistDtoPopulator implements DtoPopulator<Psychologist>{
+    private final PsychologistDto pDto;
+
+    public PsychologistDtoPopulator(){
+        this.pDto = new PsychologistDto();
+    }
     @Override
     public PsychologistDto populate(HttpServletRequest request) throws BadRequestException{
-        PsychologistDto pDto = new PsychologistDto();
         String name = request.getParameter("name");
         String crp = request.getParameter("crp");
         String phone = request.getParameter("phone");
@@ -23,5 +29,14 @@ public class PsychologistDtoPopulator implements DtoPopulator<PsychologistDto>{
         pDto.setEmail(email);
         return pDto;
     }
-    
+
+    @Override
+    public PsychologistDto populate(Psychologist model) {
+        pDto.setId(model.getId());
+        pDto.setName(model.getName());
+        pDto.setCrp(model.getCrp());
+        pDto.setPhone(model.getPhone());
+        pDto.setEmail(model.getEmail());
+        return pDto;
+    }
 }

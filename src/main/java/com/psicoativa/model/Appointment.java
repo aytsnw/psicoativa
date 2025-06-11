@@ -17,9 +17,6 @@ import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "appointments")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class Appointment {
     @Transient
     public final static short MAX_DURATION_MINUTES = 59;
@@ -53,13 +50,13 @@ public class Appointment {
     public void setId(int id) {
         this.id = id;
     }
-    public UserBase getClient() {
+    public Client getClient() {
         return client;
     }
     public void setClient(Client client) {
         this.client = client;
     }
-    public UserBase getPsychologist() {
+    public Psychologist getPsychologist() {
         return psychologist;
     }
     public void setPsychologist(Psychologist psychologist) {
@@ -101,7 +98,7 @@ public class Appointment {
     public Short getEndMinute() {
         return endMinute;
     } 
-    public void setEndminute(short endMinute) {
+    public void setEndMinute(short endMinute) {
         this.endMinute = endMinute;
     }
     public int getStartTimeId() {
