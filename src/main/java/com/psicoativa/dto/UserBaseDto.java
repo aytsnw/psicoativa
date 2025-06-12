@@ -2,11 +2,14 @@ package com.psicoativa.dto;
 
 import com.psicoativa.core.Dto;
 
+import java.util.List;
+
 public class UserBaseDto extends Dto {
     private int id;
     private String name;
     private String phone;
     private String email;
+    private List<Integer> appointments;
 
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
@@ -28,4 +31,6 @@ public class UserBaseDto extends Dto {
     public String getEmail(){
         return this.email;
     }
+    public List<Integer> getAppointments() {return appointments;}
+    public void setAppointments(List<Integer> appointments) {this.appointments = appointments;}
 }

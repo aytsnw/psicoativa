@@ -4,8 +4,12 @@ import com.psicoativa.core.Dto;
 import com.psicoativa.dto.PsychologistDto;
 import com.psicoativa.exception.BadRequestException;
 
+import com.psicoativa.model.Appointment;
 import com.psicoativa.model.Psychologist;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PsychologistDtoPopulator implements DtoPopulator<Psychologist>{
     private final PsychologistDto pDto;
@@ -37,6 +41,11 @@ public class PsychologistDtoPopulator implements DtoPopulator<Psychologist>{
         pDto.setCrp(model.getCrp());
         pDto.setPhone(model.getPhone());
         pDto.setEmail(model.getEmail());
+        List<Integer> appointments = new ArrayList<>();
+        for (Appointment a : model.getAppointments()){
+            appointments.add(a.getId());
+        }
+        pDto.setAppointments(appointments);
         return pDto;
     }
 }
