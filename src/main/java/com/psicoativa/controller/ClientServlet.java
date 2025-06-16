@@ -51,7 +51,7 @@ public class ClientServlet extends HttpServlet{
             out.print(objMapper.writeValueAsString(cDto));
             response.setStatus(200);
         } catch (NumberFormatException e){
-            out.println("Bad request: id must be of type integer and not empty.");
+            out.println("id must be of type integer and not empty.");
             response.setStatus(400);
         } catch (ServiceFailedException e) {
             out.println(e.getMessage());

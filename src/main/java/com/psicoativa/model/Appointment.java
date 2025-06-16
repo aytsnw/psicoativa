@@ -78,21 +78,21 @@ public class Appointment {
         return startHour;
     }
     public void setStartHour(short startHour) {
-        if (startHour > 23 ||startHour < 0) throw new InvalidDataException("Hour value must be less than or equal to 23 and positive.");
+        if (startHour > 23 ||startHour < 0) throw new InvalidDataException("hour value must be less than or equal to 23 and positive.");
         this.startHour = startHour;
     }
     public Short getStartMinute() {
         return startMinute;
     }
     public void setStartMinute(short startMinute) {
-        if (startMinute > 59 || startMinute < 0) throw new InvalidDataException("Minute value must be less than or equal to 59 and positive.");
+        if (startMinute > 59 || startMinute < 0) throw new InvalidDataException("minute value must be less than or equal to 59 and positive.");
         this.startMinute = startMinute;
     }
     public Short getEndHour() {
         return endHour;
     }
     public void setEndHour(short endHour) {
-        if (endHour > 23 ||endHour < 0) throw new InvalidDataException("Hour value must be less than or equal to 23 and positive.");
+        if (endHour > 23 ||endHour < 0) throw new InvalidDataException("hour value must be less than or equal to 23 and positive.");
         this.endHour = endHour;
     }
     public Short getEndMinute() {

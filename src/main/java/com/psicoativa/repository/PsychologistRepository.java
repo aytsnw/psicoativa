@@ -33,7 +33,7 @@ public class PsychologistRepository {
         try {
             return psychologists.get(0);
         } catch (IndexOutOfBoundsException e) {
-            throw new DbOperationFailedException("Id not registered in database.");
+            return null;
         } finally {
             session.close();
         }

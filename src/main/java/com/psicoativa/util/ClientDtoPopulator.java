@@ -23,10 +23,10 @@ public class ClientDtoPopulator implements DtoPopulator<Client>{
         String cpf = request.getParameter("cpf");
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
-        if (name.isEmpty()) throw new BadRequestException("Empty parameter: name");
-        if (cpf.isEmpty()) throw new BadRequestException("Empty parameter: cpf");
-        if (phone.isEmpty()) throw new BadRequestException("Empty parameter: phone");
-        if (email.isEmpty()) throw new BadRequestException("Empty parameter: email");
+        if (name == null || name.isEmpty()) throw new BadRequestException("empty or null parameter: name");
+        if (cpf == null || cpf.isEmpty()) throw new BadRequestException("empty or null parameter: cpf");
+        if (phone == null || phone.isEmpty()) throw new BadRequestException("empty or null parameter: phone");
+        if (email == null || email.isEmpty()) throw new BadRequestException("empty or null parameter: email");
         cDto.setName(name);
         cDto.setCpf(cpf);
         cDto.setPhone(phone);

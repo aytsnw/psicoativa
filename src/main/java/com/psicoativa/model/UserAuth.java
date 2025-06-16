@@ -36,8 +36,8 @@ public class UserAuth {
     }
 
     public void setPassword(String password){
-        if (password.isEmpty()) throw new InvalidDataException("Invalid client password: empty.");
-        else if (password.length() < 6) throw new InvalidDataException("Invalid client password: too short");
+        if (password.isEmpty()) throw new InvalidDataException("invalid client password: empty.");
+        else if (password.length() < 6) throw new InvalidDataException("invalid client password: too short");
         this.password = password;
         setPasswordHash();
     }

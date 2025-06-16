@@ -6,6 +6,6 @@ public class DbOperationFailedException extends RuntimeException{
     }
 
     public DbOperationFailedException(String message){
-        super(message);
+        super("Database operation failed: " + message);
     }
 }

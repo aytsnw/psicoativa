@@ -6,7 +6,6 @@ public class ServiceFailedException extends RuntimeException{
     }
 
     public ServiceFailedException(String message){
-        super(message);
+        super("Service failure: " + message);
     }
-    
 }

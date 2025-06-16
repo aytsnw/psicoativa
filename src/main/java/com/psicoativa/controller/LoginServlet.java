@@ -3,7 +3,10 @@ package com.psicoativa.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.psicoativa.App;
+import com.psicoativa.core.UserSession;
 import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.exception.BadRequestException;
 import com.psicoativa.exception.ServiceFailedException;
@@ -28,7 +31,28 @@ public class LoginServlet extends HttpServlet{
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response){
-        RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
+        PrintWriter out = null;
+        try {out = response.getWriter();}
+        catch (IOException e) {e.printStackTrace();response.setStatus(500);}
+
+        ObjectMapper mapper = new ObjectMapper();
+        HttpSession session = request.getSession(false);
+
+        try{
+            if (session == null) throw new BadRequestException("client not logged in.");
+            UserSession us = new UserSession();
+            us.setId((int) session.getAttribute("id"));
+            us.setEmail((String) session.getAttribute("email"));
+            us.setType((String) session.getAttribute("type"));
+            out.print(mapper.writeValueAsString(us));
+            response.setStatus(200);
+        } catch (JsonProcessingException e){
+            System.out.println(e.getMessage());
+            response.setStatus(500);
+        } catch (BadRequestException e){
+            out.print(e.getMessage());
+            response.setStatus(400);
+        }
     }
     
     @Override
@@ -42,20 +66,16 @@ public class LoginServlet extends HttpServlet{
         UserAuthDtoPopulator uDtoPopulator = new UserAuthDtoPopulator();
 
         try{
-            out = response.getWriter();
             UserAuthDto uDto = uDtoPopulator.populate(request);
             uDto = lService.loginUser(uDto);
             session.setAttribute("id", uDto.getId());
             session.setAttribute("email", uDto.getEmail());
             session.setAttribute("type", uDto.getType());
-            response.setStatus(200);
             out.println("User logged in!");
+            response.setStatus(200);
         } catch (ServiceFailedException | BadRequestException e){
             out.println(e.getMessage());
             response.setStatus(400);
-        } catch (IOException e){
-            out.println("Internal Server Error");
-            response.setStatus(500);
         }
     }
 }

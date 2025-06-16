@@ -37,18 +37,18 @@ public class UserBase {
 
     public void setName(String name) throws InvalidDataException{
         name = name.strip();
-        if (name.isEmpty()) throw new InvalidDataException("Invalid client name: empty.");
+        if (name.isEmpty()) throw new InvalidDataException("invalid client name: empty.");
         name = name.substring(0,1).toUpperCase() + name.substring(1);
         this.name = name;
     }
 
     public void setPhone(String phone) throws InvalidDataException{
-        if (phone.isEmpty()) throw new InvalidDataException("Invalid client phone: empty.");
+        if (phone.isEmpty()) throw new InvalidDataException("invalid client phone: empty.");
         this.phone = phone;
     }
 
     public void setEmail(String email) throws InvalidDataException{
-        if (email.isEmpty()) throw new InvalidDataException("Invalid client email: empty.");
+        if (email.isEmpty()) throw new InvalidDataException("invalid client email: empty.");
         this.email = email;
     }
 

@@ -23,10 +23,10 @@ public class PsychologistDtoPopulator implements DtoPopulator<Psychologist>{
         String crp = request.getParameter("crp");
         String phone = request.getParameter("phone");
         String email =request.getParameter("email");
-        if (name.isEmpty()) throw new BadRequestException("Bad request: 'name' is empty");
-        if (crp.isEmpty()) throw new BadRequestException("Bad request: 'crp' is empty");
-        if (phone.isEmpty()) throw new BadRequestException("Bad request: 'phone' is empty");
-        if (email.isEmpty()) throw new BadRequestException("Bad request: 'email' is empty");
+        if (name == null || name.isEmpty()) throw new BadRequestException("Bad request: 'name' is empty");
+        if (crp == null || crp.isEmpty()) throw new BadRequestException("Bad request: 'crp' is empty");
+        if (phone == null || phone.isEmpty()) throw new BadRequestException("Bad request: 'phone' is empty");
+        if (email == null || email.isEmpty()) throw new BadRequestException("Bad request: 'email' is empty");
         pDto.setName(name);
         pDto.setCrp(crp);
         pDto.setPhone(phone);

@@ -62,8 +62,8 @@ public class AppointmentServlet extends HttpServlet{
         try{
             String operation = request.getParameter("operation");
             String appointmentIdString = request.getParameter("appointment_id");
-            if (operation == null || operation.isEmpty()) throw new BadRequestException("Bad request: 'operation' is empty or null");
-            if (appointmentIdString == null || appointmentIdString.isEmpty()) throw new BadRequestException("Bad request: 'appointment_id' is empty or null");
+            if (operation == null || operation.isEmpty()) throw new BadRequestException("'operation' is empty or null");
+            if (appointmentIdString == null || appointmentIdString.isEmpty()) throw new BadRequestException("'appointment_id' is empty or null");
             Integer appointmentId = parseId(appointmentIdString);
 
             if (operation.equals("cancel")){
@@ -71,7 +71,7 @@ public class AppointmentServlet extends HttpServlet{
                 response.setStatus(200);
                 out.print("Appointment canceled.");
             }
-            else throw new BadRequestException("Bad Request: options are 'cancel'");
+            else throw new BadRequestException("options are 'cancel'.");
         } catch (ServiceFailedException | BadRequestException e){
             response.setStatus(400);
             out.print(e.getMessage());
@@ -98,7 +98,7 @@ public class AppointmentServlet extends HttpServlet{
 
     private Integer parseId(String idString){
         try{return Integer.parseInt(idString);} catch (NumberFormatException e){
-            throw new BadRequestException("Bad request: id must be of type 'int'");
+            throw new BadRequestException("id must be of type 'int'");
         }
     }
 }

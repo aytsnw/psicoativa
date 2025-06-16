@@ -30,8 +30,8 @@ public class Client extends UserBase{
     }
 
     public void setCpf(String cpf) throws InvalidDataException{
-        if (cpf.isEmpty()) throw new InvalidDataException("Invalid client cpf: empty");
-        if (cpf.length() != 11 || !isValidCpf(cpf)) throw new InvalidDataException("Invalid client cpf: cpf code is not valid");
+        if (cpf.isEmpty()) throw new InvalidDataException("invalid client cpf: empty");
+        if (cpf.length() != 11 || !isValidCpf(cpf)) throw new InvalidDataException("invalid client cpf: cpf code is not valid");
         this.cpf = cpf;
     }
 
