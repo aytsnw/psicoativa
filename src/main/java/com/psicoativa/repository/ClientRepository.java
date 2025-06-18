@@ -30,4 +30,13 @@ public class ClientRepository {
             return session.get(Client.class, id);
         }
     }
+
+    public List<Client> findByName(String name){
+        try (Session session = App.sf.openSession()) {
+            name = name.toLowerCase();
+            Query query = session.createQuery("FROM Client c WHERE LOWER(name) LIKE :name", Client.class);
+            query.setParameter("name", '%' + name + '%');
+            return query.getResultList();
+        }
+    }
 }

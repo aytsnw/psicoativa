@@ -27,10 +27,10 @@ public class RegisterServlet extends HttpServlet{
         try {
             if (type == null) throw new BadRequestException("'type' null.");
             if (request.getParameter("type").equals("client")){
-                RequestDispatcher rd = request.getRequestDispatcher("/client");
+                RequestDispatcher rd = request.getRequestDispatcher("/api/v1/client");
                 rd.forward(request, response);
             } else if (request.getParameter("type").equals("psychologist")){
-                RequestDispatcher rd = request.getRequestDispatcher("/psychologist");
+                RequestDispatcher rd = request.getRequestDispatcher("/api/v1/psychologist");
                 rd.forward(request, response);
             } else {
                 throw new BadRequestException("invalid type. Availabe: 'client' | 'psychologist'");

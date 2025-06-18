@@ -29,8 +29,10 @@ public class AppointmentRepository {
     public List<Appointment> findByRange(LocalDate date, int start, int end){
         try (Session session = App.sf.openSession()){
             Query query = session.createQuery("FROM Appointment a WHERE date = :date AND ("+
-                                                                "(startTimeId >= :start AND startTimeId <= :end) OR" +
-                                                                "(endTimeId >= :start AND endTimeId <= :end)) AND" +
+                                                                "(startTimeId >= :start AND startTimeId <= :end) OR " +
+                                                                "(endTimeId >= :start AND endTimeId <= :end) OR " +
+                                                                "(startTimeId <= :start AND endTimeId >= :end) OR" +
+                                                                "(startTimeId >= :start AND endTimeId <= :end)) AND " +
                                                                 "(status = 'active')", Appointment.class);
 
             query.setParameter("date", date);

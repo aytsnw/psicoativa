@@ -8,6 +8,9 @@ import com.psicoativa.model.Client;
 import com.psicoativa.repository.ClientRepository;
 import com.psicoativa.util.ClientDtoPopulator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClientService {
     private final ClientRepository cRepo;
 
@@ -34,6 +37,17 @@ public class ClientService {
         Client client = cRepo.findById(id);
         if (client == null) throw new ServiceFailedException("Service failure: Couldn't find client of id: "+ id);
         return client;
+    }
+
+    public List<ClientDto> getClientDto(String name){
+        ClientDtoPopulator cDtoPopulator = new ClientDtoPopulator();
+        List<Client> clients = cRepo.findByName(name);
+        if (clients.isEmpty()) throw new ServiceFailedException("couldn't find any results with name: " + name);
+        List<ClientDto> cDtos = new ArrayList<ClientDto>();
+        for (Client c : clients){
+            cDtos.add(cDtoPopulator.populate(c));
+        }
+        return cDtos;
     }
     
     public Client parseDto(ClientDto clientDto) throws InvalidDataException{

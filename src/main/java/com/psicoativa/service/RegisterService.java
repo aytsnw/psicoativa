@@ -25,6 +25,8 @@ public class RegisterService {
         try {
             UserAuth user = uService.parseDto(uDto);
             Client client = cService.parseDto(cDto);
+            client.setUserAuth(user);
+            user.setUserBase(client);
             cService.saveClient(client);
             uService.saveUser(user);
         } catch (DbOperationFailedException | InvalidDataException e) {
@@ -33,15 +35,15 @@ public class RegisterService {
     }
 
     public void registerPsychologist(UserAuthDto uDto, PsychologistDto pDto){
-        UserAuth user = uService.parseDto(uDto);
-        Psychologist psy = pService.parseDto(pDto);
-        psy.setUserAuth(user);
-        user.setUserBase(psy);
         try {
+            UserAuth user = uService.parseDto(uDto);
+            Psychologist psy = pService.parseDto(pDto);
+            psy.setUserAuth(user);
+            user.setUserBase(psy);
             pService.savePsychologist(psy);
             uService.saveUser(user);
-        } catch (DbOperationFailedException e) {
-            throw new ServiceFailedException("Violation of constraint: crp or email already exists in database.");
+        } catch (DbOperationFailedException | InvalidDataException e) {
+            throw new ServiceFailedException("Service Failure: " + e.getMessage());
         }
     }
 }

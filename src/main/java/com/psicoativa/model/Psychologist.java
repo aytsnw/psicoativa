@@ -30,7 +30,7 @@ public class Psychologist extends UserBase{
 
     public void setCrp(String crp){
         if (crp.isEmpty()) throw new InvalidDataException("invalid client cpf: empty");
-        if (crp.length() != 7 || !isValidCrp(crp)) throw new InvalidDataException("invalid client cpf: cpf code is not valid");
+        if (crp.length() != 7 || !isValidCrp(crp)) throw new InvalidDataException("invalid client crp: crp code is not valid");
         this.crp = crp;
     }
     public String getCrp(){

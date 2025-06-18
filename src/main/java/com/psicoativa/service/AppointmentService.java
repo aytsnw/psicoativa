@@ -24,7 +24,7 @@ public class AppointmentService {
     public void saveAppointment(AppointmentDto aDto){
         try {
             Appointment ap = parseDto(aDto);
-            if (!isTimeSlotFree(ap, aRepo)){
+            if (!isTimeSlotFree(ap)){
                 throw new ServiceFailedException("Time slot already booked.");
             }
             aRepo.addToDb(ap);
@@ -40,9 +40,10 @@ public class AppointmentService {
         return aDtoPopulator.populate(ap);
     }
 
-    private boolean isTimeSlotFree(Appointment ap, AppointmentRepository aRepo){
+    private boolean isTimeSlotFree(Appointment ap){
         int start = ap.getStartTimeId();
         int end = ap.getEndTimeId();
+        System.out.println(ap.getDate());
         return aRepo.findByRange(ap.getDate(), start, end).isEmpty();
     }
 

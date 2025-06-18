@@ -4,6 +4,7 @@ import com.psicoativa.core.Dto;
 import com.psicoativa.dto.PsychologistDto;
 import com.psicoativa.exception.BadRequestException;
 
+import com.psicoativa.exception.InvalidDataException;
 import com.psicoativa.model.Appointment;
 import com.psicoativa.model.Psychologist;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,13 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PsychologistDtoPopulator implements DtoPopulator<Psychologist>{
-    private final PsychologistDto pDto;
-
-    public PsychologistDtoPopulator(){
-        this.pDto = new PsychologistDto();
-    }
     @Override
-    public PsychologistDto populate(HttpServletRequest request) throws BadRequestException{
+    public PsychologistDto populate(HttpServletRequest request) throws BadRequestException, InvalidDataException {
+        PsychologistDto pDto = new PsychologistDto();
         String name = request.getParameter("name");
         String crp = request.getParameter("crp");
         String phone = request.getParameter("phone");
@@ -36,6 +33,7 @@ public class PsychologistDtoPopulator implements DtoPopulator<Psychologist>{
 
     @Override
     public PsychologistDto populate(Psychologist model) {
+        PsychologistDto pDto = new PsychologistDto();
         pDto.setId(model.getId());
         pDto.setName(model.getName());
         pDto.setCrp(model.getCrp());

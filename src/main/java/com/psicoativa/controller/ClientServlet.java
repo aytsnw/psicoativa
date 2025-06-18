@@ -2,6 +2,7 @@ package com.psicoativa.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +12,7 @@ import com.psicoativa.App;
 import com.psicoativa.dto.ClientDto;
 import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.exception.BadRequestException;
+import com.psicoativa.exception.InvalidDataException;
 import com.psicoativa.exception.ServiceFailedException;
 import com.psicoativa.model.Client;
 import com.psicoativa.service.ClientService;
@@ -44,19 +46,31 @@ public class ClientServlet extends HttpServlet{
         objMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objMapper.registerModule(new JavaTimeModule());
 
-        int id;
+        ClientDto cDto = null;
+        List<ClientDto> cDtos= null;
+
+        String parameter = request.getParameter("parameter");
+
         try {
-            id = Integer.parseInt(request.getParameter("client_id"));
-            ClientDto cDto = cService.getClientDto(id);
-            out.print(objMapper.writeValueAsString(cDto));
+            if (parameter == null) {
+                throw new BadRequestException("'parameter' is null");
+            } else if (parameter.equals("id")) {
+                parameter = request.getParameter("client_id");
+                cDto = cService.getClientDto(Integer.parseInt(parameter));
+                out.print(objMapper.writeValueAsString(cDto));
+            } else if (parameter.equals("name")) {
+                parameter = request.getParameter("name");
+                cDtos = cService.getClientDto(parameter);
+                out.print(objMapper.writeValueAsString(cDtos));
+            }
             response.setStatus(200);
         } catch (NumberFormatException e){
-            out.println("id must be of type integer and not empty.");
+            out.print("id must be of type integer and not empty.");
             response.setStatus(400);
         } catch (ServiceFailedException e) {
-            out.println(e.getMessage());
+            out.print(e.getMessage());
             response.setStatus(400);
-        }catch (JsonProcessingException e){
+        } catch (JsonProcessingException e){
             e.printStackTrace();
             response.setStatus(500);
         }
@@ -77,7 +91,7 @@ public class ClientServlet extends HttpServlet{
             rService.registerClient(uDto, cDto);
             response.setStatus(200);
             out.println("Client registered!");
-        } catch (ServiceFailedException | BadRequestException e) {
+        } catch (ServiceFailedException | InvalidDataException | BadRequestException e) {
             response.setStatus(400);
             out.println(e.getMessage());
         }

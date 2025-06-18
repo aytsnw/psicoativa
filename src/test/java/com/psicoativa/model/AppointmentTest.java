@@ -17,7 +17,7 @@ public class AppointmentTest {
     @Test
     void setValidStartHour(){
         Appointment ap = new Appointment();
-        short hour = 38;
+        short hour = 22;
         assertDoesNotThrow(() -> ap.setStartHour(hour));
     }
 }

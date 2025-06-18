@@ -12,13 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDtoPopulator implements DtoPopulator<Client>{
-    private final ClientDto cDto;
-
-    public ClientDtoPopulator(){
-        this.cDto = new ClientDto();
-    }
     @Override
     public ClientDto populate(HttpServletRequest request){
+        ClientDto cDto = new ClientDto();
         String name = request.getParameter("name");
         String cpf = request.getParameter("cpf");
         String phone = request.getParameter("phone");
@@ -36,6 +32,7 @@ public class ClientDtoPopulator implements DtoPopulator<Client>{
 
     @Override
     public ClientDto populate(Client model) {
+        ClientDto cDto = new ClientDto();
         cDto.setId(model.getId());
         cDto.setName(model.getName());
         cDto.setCpf(model.getCpf());

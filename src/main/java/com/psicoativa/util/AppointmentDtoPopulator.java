@@ -15,14 +15,9 @@ import com.psicoativa.service.PsychologistService;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class AppointmentDtoPopulator implements DtoPopulator<Appointment>{
-    private final AppointmentDto aDto;
-
-    public AppointmentDtoPopulator(){
-        this.aDto = new AppointmentDto();
-    }
-
     @Override
     public AppointmentDto populate(HttpServletRequest request) throws BadRequestException {
+        AppointmentDto aDto = new AppointmentDto();
         short day, year, month, startHour, endHour, startMinute, endMinute;
         int clientId, psychologistId;
         try{
@@ -51,6 +46,7 @@ public class AppointmentDtoPopulator implements DtoPopulator<Appointment>{
 
     @Override
     public AppointmentDto populate(Appointment model){
+        AppointmentDto aDto = new AppointmentDto();
         int clientId, psychologistId;
         Client client = model.getClient();
         Psychologist psy = model.getPsychologist();
