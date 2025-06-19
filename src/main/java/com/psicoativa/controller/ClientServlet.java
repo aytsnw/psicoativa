@@ -56,16 +56,18 @@ public class ClientServlet extends HttpServlet{
                 throw new BadRequestException("'parameter' is null");
             } else if (parameter.equals("id")) {
                 parameter = request.getParameter("client_id");
+                if (parameter == null) throw new BadRequestException("client_id is null.");
                 cDto = cService.getClientDto(Integer.parseInt(parameter));
                 out.print(objMapper.writeValueAsString(cDto));
             } else if (parameter.equals("name")) {
                 parameter = request.getParameter("name");
+                if (parameter == null) throw new BadRequestException("name is null.");
                 cDtos = cService.getClientDto(parameter);
                 out.print(objMapper.writeValueAsString(cDtos));
-            }
+            } else throw new BadRequestException("Invalid parameter type. available: 'name' | 'id'");
             response.setStatus(200);
-        } catch (NumberFormatException e){
-            out.print("id must be of type integer and not empty.");
+        } catch (BadRequestException | NumberFormatException e){
+            out.print(e.getMessage());
             response.setStatus(400);
         } catch (ServiceFailedException e) {
             out.print(e.getMessage());

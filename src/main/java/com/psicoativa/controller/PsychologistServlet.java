@@ -2,11 +2,14 @@ package com.psicoativa.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.psicoativa.App;
+import com.psicoativa.dto.ClientDto;
 import com.psicoativa.dto.PsychologistDto;
 import com.psicoativa.dto.UserAuthDto;
 import com.psicoativa.exception.BadRequestException;
@@ -36,26 +39,41 @@ public class PsychologistServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response){
         PrintWriter out = null;
-        try {out = response.getWriter();} 
+        try {out = response.getWriter();}
         catch (IOException e) {e.printStackTrace();response.setStatus(500);}
 
         ObjectMapper objMapper = new ObjectMapper();
+        objMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objMapper.registerModule(new JavaTimeModule());
 
-        int id;
+        PsychologistDto pDto = null;
+        List<PsychologistDto> pDtos= null;
+
+        String parameter = request.getParameter("parameter");
+
         try {
-            id = Integer.parseInt(request.getParameter("psychologist_id"));
-            PsychologistDto pDto = pService.getPsychologistDto(id);
-            out.print(objMapper.writeValueAsString(pDto));
+            if (parameter == null) {
+                throw new BadRequestException("'parameter' is null");
+            } else if (parameter.equals("id")) {
+                parameter = request.getParameter("psychologist_id");
+                if (parameter == null) throw new BadRequestException("'psychologist_id' is null.");
+                pDto = pService.getPsychologistDto(Integer.parseInt(parameter));
+                out.print(objMapper.writeValueAsString(pDto));
+            } else if (parameter.equals("name")) {
+                parameter = request.getParameter("name");
+                if (parameter == null) throw new BadRequestException("'name' is null.");
+                pDtos = pService.getPsychologistDto(parameter);
+                out.print(objMapper.writeValueAsString(pDtos));
+            } else throw new BadRequestException("Invalid parameter type. available: 'name' | 'id'");
             response.setStatus(200);
-        } catch (NumberFormatException e){
-            out.println("id must be of type integer and not empty.");
+        } catch (BadRequestException | NumberFormatException e){
+            out.print(e.getMessage());
             response.setStatus(400);
         } catch (ServiceFailedException e) {
-            out.println(e.getMessage());
-            response.setStatus(400);
-        }catch (JsonProcessingException e){
             out.print(e.getMessage());
+            response.setStatus(400);
+        } catch (JsonProcessingException e){
+            e.printStackTrace();
             response.setStatus(500);
         }
     }

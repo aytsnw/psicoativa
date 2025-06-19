@@ -2,6 +2,7 @@ package com.psicoativa.repository;
 
 import java.util.List;
 
+import com.psicoativa.model.Client;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -36,6 +37,15 @@ public class PsychologistRepository {
             return null;
         } finally {
             session.close();
+        }
+    }
+
+    public List<Psychologist> findByName(String name){
+        try (Session session = App.sf.openSession()) {
+            name = name.toLowerCase();
+            Query query = session.createQuery("FROM Psychologist WHERE LOWER(name) LIKE :name", Psychologist.class);
+            query.setParameter("name", '%' + name + '%');
+            return query.getResultList();
         }
     }
 }

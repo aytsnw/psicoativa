@@ -1,12 +1,18 @@
 package com.psicoativa.service;
 
+import com.psicoativa.dto.ClientDto;
 import com.psicoativa.dto.PsychologistDto;
 import com.psicoativa.exception.DbOperationFailedException;
 import com.psicoativa.exception.InvalidDataException;
 import com.psicoativa.exception.ServiceFailedException;
+import com.psicoativa.model.Client;
 import com.psicoativa.model.Psychologist;
 import com.psicoativa.repository.PsychologistRepository;
+import com.psicoativa.util.ClientDtoPopulator;
 import com.psicoativa.util.PsychologistDtoPopulator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PsychologistService {
     private final PsychologistRepository pRepo;
@@ -44,5 +50,16 @@ public class PsychologistService {
         psy.setEmail(pDto.getEmail());
         psy.setPhone(pDto.getPhone());
         return psy;
+    }
+
+    public List<PsychologistDto> getPsychologistDto(String name){
+        PsychologistDtoPopulator pDtoPopulator = new PsychologistDtoPopulator();
+        List<Psychologist> psychologists = pRepo.findByName(name);
+        if (psychologists.isEmpty()) throw new ServiceFailedException("couldn't find any results with name: " + name);
+        List<PsychologistDto> pDtos = new ArrayList<PsychologistDto>();
+        for (Psychologist p : psychologists){
+            pDtos.add(pDtoPopulator.populate(p));
+        }
+        return pDtos;
     }
 } 
